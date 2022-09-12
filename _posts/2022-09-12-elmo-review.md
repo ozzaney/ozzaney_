@@ -145,6 +145,15 @@ ELMo representation은 biLM에서 등장하는 internal state의 값들을 특�
 
 위 그림은 baseline과 ELMo를 추가한 모델의 training set의 크기에 따른 비교입니다. 이를 통해 ELMo를 추가하는 것이 더 적은 데이터로도 더 좋은 결과를 낼 수 있음을 확인할 수 있습니다. 
 
+### 참고문헌
+
+#### 논문링크
+https://arxiv.org/pdf/1802.05365.pdf
+#### 참고링크 (유튜브, 블로그, 사이트)
+https://wikidocs.net/33930
+https://greeksharifa.github.io/nlp(natural%20language%20processing)%20/%20rnns/2019/08/20/ELMo-Deep-contextualized-word-representations/
+https://velog.io/@skm0626/Deep-contextualized-word-representationsELMo-%EB%85%BC%EB%AC%B8-%EB%A6%AC%EB%B7%B0
+https://www.youtube.com/watch?v=YZerhaFMPTw
 
 ### 더 공부해보면 좋을 keyword
 
