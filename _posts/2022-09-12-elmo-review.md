@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "What is ELMo?"
-categories: [ article ]
+categories: [ paper_review, AI, NLP ]
 image: assets/images/elmo.jpg
 ---
 
