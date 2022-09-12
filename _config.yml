@@ -2,8 +2,8 @@
 name: "YejinHand blog"
 title: "YejinHand blog"
 description: "Read paper(s) every week"
-logo: 'assets/images/hand.png'
-favicon: 'assets/images/hand.png'
+logo: 'assets/images/hand2.png'
+favicon: 'assets/images/hand2.png'
 baseurl: "https://ozzaney.github.io"
 google_analytics: 'UA-46278016-1'
 disqus: 'demowebsite'
