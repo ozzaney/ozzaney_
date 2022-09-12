@@ -50,8 +50,6 @@ ELMo는 문장(context)를 입력으로 받는 함수입니다.
 
 ELMo(input) = output
 
-Example)
-
 ELMo(bank account) = [1,3],[,2,4]
 ELMo(river bank) = [5,1],[10,7]
  
@@ -60,9 +58,11 @@ ELMo(river bank) = [5,1],[10,7]
 이것이 가능한 이유는 무엇일까요?
 
 
-ELMo의 이러한 특별한 성능을 가능하게 한 세 가지 포인트는 **1. biLM(bidirectional Language Model)구조를 사용하고, 2. 해당 구조 내의 모든 internal state를 사용했으며, 3. Character embedding from CNN을 사용했다는 점** 입니다.
+ELMo의 이러한 특별한 성능을 가능하게 한 세 가지 포인트는 
+**1. biLM(bidirectional Language Model)구조를 사용하고, 2. 해당 구조 내의 모든 internal state를 사용했으며, 3. Character embedding from CNN을 사용했다는 점** 입니다.
 
-1. biLM(bidirectional Language Model) 구조 
+1. biLM(bidirectional Language Model) 구조
+
 LM은 Language Model의 약자로, 자연어처리에서 뒤의 단어들로 앞의 단어를 예측하는 모델을 이르는 말입니다. 
 (LM에는 기본적인 Neural Network LM, RNN LM등 다양한 LM이 존재합니다.)
 biLM은 두개의 방향을 가진 순방향 LM과 역방향 LM을 합친 LM입니다. 
@@ -99,6 +99,7 @@ Intrinsic evaluation을 해본 결과, 상위 레이어(출력층에 가까운 �
 https://bab2min.tistory.com/576)
 또한 하위 레이어(입력층에 가까운 레이어)일수록 문법에 가까운 벡터를 출력한다고 합니다. (Pos 태깅과 같은 작업에 사용될 수 있었습니다.)
 이러한 결과는 MT encoders에서와 유사하다고 합니다. 
+
  3.  Character embedding from CNN 사용
 Character convolution을 통한 subword unit을 사용해 동철이의어(또는 동음이의어)를 잘 처리할 수 있도록 했습니다.
 최초 레이어의 임베딩은 문맥의 영향을 받지 않고(왜?), ELMo를 pretrained word embedding과 비교하기 위해서 Glove나 word2vec을 워드 임베딩으로 사용하지 않았습니다. 
@@ -145,7 +146,7 @@ ELMo representation은 biLM에서 등장하는 internal state의 값들을 특�
 위 그림은 baseline과 ELMo를 추가한 모델의 training set의 크기에 따른 비교입니다. 이를 통해 ELMo를 추가하는 것이 더 적은 데이터로도 더 좋은 결과를 낼 수 있음을 확인할 수 있습니다. 
 
 
-### 더 공부해보면 좋을 key word
+### 더 공부해보면 좋을 keyword
 
 1. Residual connection
 2. Intrinsic/extrinsic evaluation
