@@ -73,17 +73,15 @@ biLM은 두개의 방향을 가진 순방향 LM과 역방향 LM을 합친 LM입�
 순방향 LM
 
 <img width="445" alt="순방향" src="https://user-images.githubusercontent.com/85322951/189663790-12c9c7ee-f893-4251-91e1-39358f0d2616.png">
-![walking]({{ site.baseurl }}/assets/images/순방향.jpg)
+
 
 역방향 LM
 
 <img width="444" alt="역방향" src="https://user-images.githubusercontent.com/85322951/189663942-0e69d2c8-2f37-417e-979b-0a6395039abd.png">ㅍ
-![walking]({{ site.baseurl }}/assets/images/역방향.jpg)
 
 
 forward and backward direction의 log likelihood를 합한 값을 maximize 합니다.
 
-![walking]({{ site.baseurl }}/assets/images/로그라이클리.jpg)
 <img width="452" alt="로그라이클리" src="https://user-images.githubusercontent.com/85322951/189664088-ed154014-e9cc-42f3-a8f7-463b534c52b4.png">
 
  Deep contextualized word representations에서는 거대한 corpus로 사전 학습된  biLM을 사용합니다.
@@ -112,16 +110,13 @@ Character convolution을 통한 subword unit을 사용해 동철이의어(또는
 ELMo는 이러한 특별한 방식으로 predefined sense class로 명시적으로 학습시키는 과정 없이도 단어의 여러 의미를 임베딩 representation에 반영할 수 있습니다.
 
 ELMo representation은 biLM에서 등장하는 internal state의 값들을 특별하게 합친 것으로, 다음과 같은 식을 가집니다.
-![walking]({{ site.baseurl }}/assets/images/elmo_representation.jpg)
 <img width="342" alt="elmo_representation" src="https://user-images.githubusercontent.com/85322951/189664147-f7a17c5c-c3e5-41de-8885-d8167806c49c.png">
 
 위 식에서 s는 soft max에 정규화된 가중치이고, gamma는 전체 ELMo 벡터의 크기를 조절하는 역할을 합니다.
 아래의 그림은 ELMo가 임베딩 벡터를 만드는 과정을 시각화한 것 입니다.
 
-![walking]({{ site.baseurl }}/assets/images/forward_and_backward.jpg)
 <img width="546" alt="forward_and_backward" src="https://user-images.githubusercontent.com/85322951/189664417-906aa5f3-e218-4e2a-9f01-188d56648de4.png">
 
-![walking]({{ site.baseurl }}/assets/images/elmo_step.jpg)
 <img width="535" alt="elmo_step" src="https://user-images.githubusercontent.com/85322951/189664313-9c807f17-eabc-42ec-bb84-5bccc50d0f84.png">
 
 출처: https://wikidocs.net/33930
@@ -131,7 +126,6 @@ ELMo representation은 biLM에서 등장하는 internal state의 값들을 특�
 
 위에서 완성된 ELMo representation을 활용해 다양한 NLP 테스크를 수행하고자 한다면 어떻게 할까요?
 
-![walking]({{ site.baseurl }}/assets/images/elmo_task.jpg)
 <img width="308" alt="elmo_task" src="https://user-images.githubusercontent.com/85322951/189664310-0b516f69-afb2-428b-b0df-4196b8b80273.png">
 출처: https://wikidocs.net/33930
 
@@ -140,7 +134,6 @@ ELMo representation은 biLM에서 등장하는 internal state의 값들을 특�
 
 ### ELMo의 성능
 
-![walking]({{ site.baseurl }}/assets/images/elmo_performance.jpg)
 <img width="664" alt="elmo_performance" src="https://user-images.githubusercontent.com/85322951/189664156-951e983d-3520-4da0-8439-357b2122a75b.png">
 단순히 ELMo representaition을 추가하는 것만으로 (textual entailment, question answering and sentiment analysis를 포함한) 6가지의 nlp의 어려운 task들에 대한 sota모델들의 error를 상대적으로 6-20%까지 감소시켰습니다.
 또한 ELMo와 CoVe의 분석에 따르면 심층 표현(모든 internal state를 사용하는 것)은 LSTM의 최상위 계층에서 파생된 표현보다 성능이 우수합니다.
