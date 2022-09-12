@@ -135,11 +135,13 @@ ELMo representation은 biLM에서 등장하는 internal state의 값들을 특�
 ### ELMo의 성능
 
 <img width="664" alt="elmo_performance" src="https://user-images.githubusercontent.com/85322951/189664156-951e983d-3520-4da0-8439-357b2122a75b.png">
+
 단순히 ELMo representaition을 추가하는 것만으로 (textual entailment, question answering and sentiment analysis를 포함한) 6가지의 nlp의 어려운 task들에 대한 sota모델들의 error를 상대적으로 6-20%까지 감소시켰습니다.
 또한 ELMo와 CoVe의 분석에 따르면 심층 표현(모든 internal state를 사용하는 것)은 LSTM의 최상위 계층에서 파생된 표현보다 성능이 우수합니다.
 또한 ELMo를 통해 sample efficiency를 달성할 수 있습니다. 예를 들어 ELMo를 추가하지 않았을 때 SRL 모델은 486 에폭 이후 최고 development F1에 도달하지만 ELMo를 추가한 뒤 base line의 최대치를 10 에폭만에 도달합니다. 또한 ELMo를 사용할 경우 더 적은 training sets로도 좋은 결과를 낼 수 있습니다.
-![elmo_performance2]({{ozzaney.github.io}}/assets/images/elmo_performance2.jpg)
+
 <img width="307" alt="elmo_performance2" src="https://user-images.githubusercontent.com/85322951/189664163-6f5e93f9-f8f8-4e03-a5ad-7086a0a971d0.png">
+
 위 그림은 baseline과 ELMo를 추가한 모델의 training set의 크기에 따른 비교입니다. 이를 통해 ELMo를 추가하는 것이 더 적은 데이터로도 더 좋은 결과를 낼 수 있음을 확인할 수 있습니다. 
 
 
