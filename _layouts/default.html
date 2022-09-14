@@ -204,5 +204,9 @@ ga('send', 'pageview');
 <script id="dsq-count-scr" src="//{{site.disqus}}.disqus.com/count.js"></script>
 {% endif %}
 
+{% if page.use_math %}
+  {% include mathjax_support.html %}
+{% endif %}	
 </body>
 </html>
+
