@@ -132,4 +132,238 @@ kernel의 수를 늘릴수록 더 많은 수의 단어를 함께 묶어 참고�
 크기가 4,3,2로 다양한 kernel을 이용해 합성곱을 통한 feature map을 구하고 max pool을 통해 하나의 값을 구하는 과정을 kernel의 총 개수인 6번하고 이를 concatenate한 뒤 이를 뉴런이 2개인 층에 fc layer로 연결한 모델임을 알 수 있습니다.
 
 
+<head>
+  <style>
+    table.dataframe {
+      white-space: normal;
+      width: 100%;
+      height: 240px;
+      display: block;
+      overflow: auto;
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      line-height: 20px;
+      text-align: center;
+      border: 0px !important;
+    }
+
+    table.dataframe th {
+      text-align: center;
+      font-weight: bold;
+      padding: 8px;
+    }
+
+    table.dataframe td {
+      text-align: center;
+      padding: 8px;
+    }
+
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+
+    .output_prompt {
+      overflow: auto;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      border-radius: 0.3rem;
+      -webkit-overflow-scrolling: touch;
+      padding: 0.8rem;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font: 1rem Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      color: $code-text-color;
+      border: solid 1px $border-color;
+      border-radius: 0.3rem;
+      word-break: normal;
+      white-space: pre;
+    }
+
+  .dataframe tbody tr th:only-of-type {
+      vertical-align: middle;
+  }
+
+  .dataframe tbody tr th {
+      vertical-align: top;
+  }
+
+  .dataframe thead th {
+      text-align: center !important;
+      padding: 8px;
+  }
+
+  .page__content p {
+      margin: 0 0 0px !important;
+  }
+
+  .page__content p > strong {
+    font-size: 0.8rem !important;
+  }
+
+  </style>
+</head>
+
+
+
+```python
+from tensorflow.keras import datasets
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+```
+
+
+```python
+#https://www.tensorflow.org/api_docs/python/tf/keras/datasets/imdb/load_data 참고
+vocab_size = 10000 #상위 10000개의 단어사용
+(X_train, y_train), (X_test, y_test) = datasets.imdb.load_data(num_words=vocab_size)
+```
+
+
+```python
+max_len = 200
+X_train = pad_sequences(X_train, maxlen=max_len)
+X_test = pad_sequences(X_test, maxlen=max_len)
+```
+
+
+```python
+print('X_train의 크기(shape) :',X_train.shape)
+print('X_test의 크기(shape) :',X_test.shape)
+```
+
+<pre>
+X_train의 크기(shape) : (25000, 200)
+X_test의 크기(shape) : (25000, 200)
+</pre>
+
+```python
+print(y_train[:5])
+```
+
+<pre>
+[1 0 0 1 0]
+</pre>
+
+```python
+print(X_train[0])
+```
+
+<pre>
+[   5   25  100   43  838  112   50  670    2    9   35  480  284    5
+  150    4  172  112  167    2  336  385   39    4  172 4536 1111   17
+  546   38   13  447    4  192   50   16    6  147 2025   19   14   22
+    4 1920 4613  469    4   22   71   87   12   16   43  530   38   76
+   15   13 1247    4   22   17  515   17   12   16  626   18    2    5
+   62  386   12    8  316    8  106    5    4 2223 5244   16  480   66
+ 3785   33    4  130   12   16   38  619    5   25  124   51   36  135
+   48   25 1415   33    6   22   12  215   28   77   52    5   14  407
+   16   82    2    8    4  107  117 5952   15  256    4    2    7 3766
+    5  723   36   71   43  530  476   26  400  317   46    7    4    2
+ 1029   13  104   88    4  381   15  297   98   32 2071   56   26  141
+    6  194 7486   18    4  226   22   21  134  476   26  480    5  144
+   30 5535   18   51   36   28  224   92   25  104    4  226   65   16
+   38 1334   88   12   16  283    5   16 4472  113  103   32   15   16
+ 5345   19  178   32]
+</pre>
+
+```python
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, Dropout, Conv1D, GlobalMaxPooling1D, Dense
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.models import load_model
+
+vocab_size = 10000 # 몇 종류의 단어를 포함하고 있는가 (정수인코딩의 값이 0~9999까지 존재)
+embedding_dim = 256 # 임베딩 벡터의 차원 (하나의 단어를 몇차원의 벡터로 임베딩할 것인가)
+dropout_ratio = 0.3 # 드롭아웃 비율 
+num_filters = 256 # 커널의 수
+kernel_size = 3 # 커널의 크기
+hidden_units = 128 # 뉴런의 수 
+
+#하나의 문장이 input으로 들어옴 
+model = Sequential()
+model.add(Embedding(vocab_size, embedding_dim))
+model.add(Dropout(dropout_ratio))
+model.add(Conv1D(num_filters, kernel_size, padding='valid', activation='relu'))
+model.add(GlobalMaxPooling1D())
+model.add(Dense(hidden_units, activation='relu'))
+model.add(Dropout(dropout_ratio))
+model.add(Dense(1, activation='sigmoid'))
+
+# 원하는 성능나오면 stop하는 장치
+# https://keras.io/api/callbacks/early_stopping/
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=3)
+# 모델이 학습되는 동안 업데이트되는 정보들을 저장하는 장치 (저장하길 원하는 정보들을 선택)
+# https://keras.io/api/callbacks/model_checkpoint/
+mc = ModelCheckpoint('best_model.h5', monitor='val_acc', mode='max', verbose=1, save_best_only=True)
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
+history = model.fit(X_train, y_train, epochs=20, validation_data=(X_test, y_test), callbacks=[es, mc])
+```
+
+<pre>
+Epoch 1/20
+782/782 [==============================] - ETA: 0s - loss: 0.3999 - acc: 0.8070
+Epoch 1: val_acc improved from -inf to 0.88496, saving model to best_model.h5
+782/782 [==============================] - 203s 259ms/step - loss: 0.3999 - acc: 0.8070 - val_loss: 0.2709 - val_acc: 0.8850
+Epoch 2/20
+782/782 [==============================] - ETA: 0s - loss: 0.2052 - acc: 0.9186
+Epoch 2: val_acc improved from 0.88496 to 0.89080, saving model to best_model.h5
+782/782 [==============================] - 203s 260ms/step - loss: 0.2052 - acc: 0.9186 - val_loss: 0.2619 - val_acc: 0.8908
+Epoch 3/20
+782/782 [==============================] - ETA: 0s - loss: 0.0928 - acc: 0.9669
+Epoch 3: val_acc did not improve from 0.89080
+782/782 [==============================] - 201s 258ms/step - loss: 0.0928 - acc: 0.9669 - val_loss: 0.3034 - val_acc: 0.8878
+Epoch 4/20
+782/782 [==============================] - ETA: 0s - loss: 0.0375 - acc: 0.9874
+Epoch 4: val_acc did not improve from 0.89080
+782/782 [==============================] - 203s 259ms/step - loss: 0.0375 - acc: 0.9874 - val_loss: 0.3979 - val_acc: 0.8810
+Epoch 5/20
+782/782 [==============================] - ETA: 0s - loss: 0.0277 - acc: 0.9905
+Epoch 5: val_acc did not improve from 0.89080
+782/782 [==============================] - 205s 263ms/step - loss: 0.0277 - acc: 0.9905 - val_loss: 0.4680 - val_acc: 0.8836
+Epoch 5: early stopping
+</pre>
+
+```python
+model.summary()
+```
+
+<pre>
+Model: "sequential_4"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding (Embedding)       (None, None, 256)         2560000   
+                                                                 
+ dropout (Dropout)           (None, None, 256)         0         
+                                                                 
+ conv1d_4 (Conv1D)           (None, None, 256)         196864    
+                                                                 
+ global_max_pooling1d_4 (Glo  (None, 256)              0         
+ balMaxPooling1D)                                                
+                                                                 
+ dense_2 (Dense)             (None, 128)               32896     
+                                                                 
+ dropout_1 (Dropout)         (None, 128)               0         
+                                                                 
+ dense_3 (Dense)             (None, 1)                 129       
+                                                                 
+=================================================================
+Total params: 2,789,889
+Trainable params: 2,789,889
+Non-trainable params: 0
+_________________________________________________________________
+</pre>
+
+```python
+loaded_model = load_model('best_model.h5')
+print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+```
+
+<pre>
+782/782 [==============================] - 38s 48ms/step - loss: 0.2619 - acc: 0.8908
+
+ 테스트 정확도: 0.8908
+</pre>
+
 
