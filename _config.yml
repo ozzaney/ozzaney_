@@ -54,6 +54,10 @@ paginate_path: /page:num/
     
 # Other
 markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
 
 kramdown:
   input: GFM
