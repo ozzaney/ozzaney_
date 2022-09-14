@@ -2,7 +2,7 @@
 layout: post
 title:  "CNN for NLP"
 categories: [ keyword, AI, NLP ]
-image: assets/images/cnn.png
+image: assets/images/cnn.jpeg
 use_math: true
 ---
 
