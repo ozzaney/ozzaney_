@@ -131,86 +131,11 @@ kernel의 수를 늘릴수록 더 많은 수의 단어를 함께 묶어 참고�
 
 크기가 4,3,2로 다양한 kernel을 이용해 합성곱을 통한 feature map을 구하고 max pool을 통해 하나의 값을 구하는 과정을 kernel의 총 개수인 6번하고 이를 concatenate한 뒤 이를 뉴런이 2개인 층에 fc layer로 연결한 모델임을 알 수 있습니다.
 
-
-<head>
-  <style>
-    table.dataframe {
-      white-space: normal;
-      width: 100%;
-      height: 240px;
-      display: block;
-      overflow: auto;
-      font-family: Arial, sans-serif;
-      font-size: 0.9rem;
-      line-height: 20px;
-      text-align: center;
-      border: 0px !important;
-    }
-
-    table.dataframe th {
-      text-align: center;
-      font-weight: bold;
-      padding: 8px;
-    }
-
-    table.dataframe td {
-      text-align: center;
-      padding: 8px;
-    }
-
-    table.dataframe tr:hover {
-      background: #b8d1f3; 
-    }
-
-    .output_prompt {
-      overflow: auto;
-      font-size: 0.9rem;
-      line-height: 1.45;
-      border-radius: 0.3rem;
-      -webkit-overflow-scrolling: touch;
-      padding: 0.8rem;
-      margin-top: 0;
-      margin-bottom: 15px;
-      font: 1rem Consolas, "Liberation Mono", Menlo, Courier, monospace;
-      color: $code-text-color;
-      border: solid 1px $border-color;
-      border-radius: 0.3rem;
-      word-break: normal;
-      white-space: pre;
-    }
-
-  .dataframe tbody tr th:only-of-type {
-      vertical-align: middle;
-  }
-
-  .dataframe tbody tr th {
-      vertical-align: top;
-  }
-
-  .dataframe thead th {
-      text-align: center !important;
-      padding: 8px;
-  }
-
-  .page__content p {
-      margin: 0 0 0px !important;
-  }
-
-  .page__content p > strong {
-    font-size: 0.8rem !important;
-  }
-
-  </style>
-</head>
-
-
-
 ```python
 from tensorflow.keras import datasets
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 ```
-
 
 ```python
 #https://www.tensorflow.org/api_docs/python/tf/keras/datasets/imdb/load_data 참고
@@ -218,13 +143,11 @@ vocab_size = 10000 #상위 10000개의 단어사용
 (X_train, y_train), (X_test, y_test) = datasets.imdb.load_data(num_words=vocab_size)
 ```
 
-
 ```python
 max_len = 200
 X_train = pad_sequences(X_train, maxlen=max_len)
 X_test = pad_sequences(X_test, maxlen=max_len)
 ```
-
 
 ```python
 print('X_train의 크기(shape) :',X_train.shape)
