@@ -3,6 +3,7 @@ layout: post
 title:  "CNN for NLP"
 categories: [ keyword, AI, NLP ]
 image: assets/images/cnn.png
+use_math: true
 ---
 
 ## content
@@ -69,11 +70,15 @@ CNN에서 가중치는 이미 언급한 바와 같이 kernel(filter)들의 원�
 이를 통해 fc layer보다 훨씬 적은 가중치를 사용하면서도 spatial structure를 보존합니다.
 convolutional layer를 통과한 후의 차원은 다음과 같습니다.
 
+$$
+O = floor({ I-K+2P\over S }+1)
+$$
 
 input이 1개의 channel(depth)만 가지는 경우 즉 흑백 이미지인 경우라면 kernel(filter)는 1개의 채널을 가지겠지만
 만약 input이 3개의 channel을 가진 경우 즉 컬러 이미지라면 kernel또한 3개의 채널을 가져야 합니다.
 **즉 커널의 채널수와 입력의 채널수가 같아야 합니다.**
 즉 입력이 면이라면 kernel도 면이고, 입력이 상자모양이라면 kernel도 상자모양입니다.
+
 
 
 
