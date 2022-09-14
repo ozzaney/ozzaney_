@@ -100,9 +100,7 @@ https://bab2min.tistory.com/576)
 또한 하위 레이어(입력층에 가까운 레이어)일수록 문법에 가까운 벡터를 출력한다고 합니다. (Pos 태깅과 같은 작업에 사용될 수 있었습니다.)
 이러한 결과는 MT encoders에서와 유사하다고 합니다. 
 
-3.  Character embedding from CNN 사용 
-
-[Character embedding from CNN에 대한 포스트](https://ozzaney.github.io/Character-embedding-from-CNN/)에 더 자세히 다루고 있습니다.
+3. [Character embedding from CNN에 대한 포스트](https://ozzaney.github.io/Character-embedding-from-CNN/)사용 
 
 Character convolution을 통한 subword unit을 사용해 동철이의어(또는 동음이의어)를 잘 처리할 수 있도록 했습니다.
 최초 레이어의 임베딩은 문맥의 영향을 받지 않고(왜?), ELMo를 pretrained word embedding과 비교하기 위해서 Glove나 word2vec을 워드 임베딩으로 사용하지 않았습니다. 
