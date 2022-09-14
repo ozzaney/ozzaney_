@@ -5,7 +5,7 @@ categories: [ keyword, AI, NLP ]
 image: assets/images/cnn.jpeg
 use_math: true
 ---
-# how to use CNN in NLP?
+# how to use CNN in NLP? 
 
 ## content
 
@@ -13,6 +13,8 @@ use_math: true
 - 자연어처리를 위한 1D 합성곱 신경망
 - 합성곱 신경망을 이용한 분류문제 해결
 - 합성곱 신경망을 통한 문자임베딩
+
+해당 포스트는 [자연어처리 입문 NLP를 위한 합성곱 신경망](https://wikidocs.net/64065)을 참고하였습니다.
 
 ## Summary
 
@@ -94,6 +96,41 @@ input이 1개의 channel(depth)만 가지는 경우 즉 흑백 이미지인 경�
 <img width="347" alt="쌓인거" src="https://user-images.githubusercontent.com/85322951/190064045-fc5e83a8-bf33-47b8-ad48-bee293c27b9e.png">
 
 따라서 하나의 가중치 매개변수의 총 수는 "kernel의 width * kernel의 height * kernel의 depth * kernel의 개수" 입니다.
+
+6. 풀링
+
+일반적으로 합성곱층(합성곱 + activation ftn) 다음에는 풀링층을 추가하며 max pooling 또는 average pooling이 사용됩니다.
+합성곱 연산과 마찬가지로 풀링 이후 특성 맵의 크기가 줄어들며  stride도 조정가능합니다.
+다른 점은 학습해야할 가중치는 없고 연산 후에 채널의 수가 변하지 않습니다. 
+
+## 자연어처리를 위한 1D 합성곱 신경망
+
+하나의 문장이 있다고 합시다.
+이 문장이 토큰화, 패딩, 임베딩 층을 지나 행렬이 된다면 n(문장의 길이)* k(임베딩벡터의 차원수) 행렬이 될 것입니다.
+
+만약 이 행렬이 합성곱 신경망에 입력으로 주어진다면 어떻게 될까요?
+
+이럴 경우 앞서 이야기한 kernel의 너비는 k로 고정됩니다.
+그래서 문장 행렬을 kernel이 훓고 지나가려고 할 때 가로방향으로는 더이상 움직일 수 없으므로 세로방향으로만 움직이게 됩니다.
+따라서 2방향이 아니라 1방향으로만 움직이기에 1D CNN라고 하는 것입니다.
+
+<img width="708" alt="1dcnn" src="https://user-images.githubusercontent.com/85322951/190066962-3bfb929f-5cfa-4579-b990-adc1659f1819.png">
+
+위 그림은 너비가 k이고 높이는 2인 kernel이 문장행렬을 지나가는 모습입니다.
+높이가 2라는 것은 참고하는 단어 묶음의 수가 2, 즉 bigram을 뜻합니다.
+kernel의 수를 늘릴수록 더 많은 수의 단어를 함께 묶어 참고하게 되는 것이죠.
+
+<img width="618" alt="maxpool" src="https://user-images.githubusercontent.com/85322951/190067871-22132394-87b7-411a-8670-a4abff0a5aa3.png">
+
+이후 앞서 도출된 feature map에서 가장 큰 수를 추출해내는 max pooling 과정 (average pooling을 해도 됩니다.)을 거치게 됩니다.
+
+이제 이러한 1D CNN을 이용해 신경망을 설계한 것을 살펴봅시다.
+
+<img width="571" alt="신경망설계" src="https://user-images.githubusercontent.com/85322951/190068019-2c3fd2f8-bbd0-4744-b113-83c298b2d1e3.png">
+
+<img width="571" alt="신경망설계" src="https://user-images.githubusercontent.com/85322951/190068019-2c3fd2f8-bbd0-4744-b113-83c298b2d1e3.png">
+
+크기가 4,3,2로 다양한 kernel을 이용해 합성곱을 통한 feature map을 구하고 max pool을 통해 하나의 값을 구하는 과정을 kernel의 총 개수인 6번하고 이를 concatenate한 뒤 이를 뉴런이 2개인 층에 fc layer로 연결한 모델임을 알 수 있습니다.
 
 
 
