@@ -2,7 +2,7 @@
 layout: post
 title:  "CNN for NLP"
 categories: [ keyword, AI, NLP ]
-image: assets/images/cnn.jpg
+image: assets/images/cnn_fency.png
 use_math: true
 ---
 # how to use CNN in NLP? 
