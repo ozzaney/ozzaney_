@@ -71,7 +71,7 @@ CNN에서 가중치는 이미 언급한 바와 같이 kernel(filter)들의 원�
 convolutional layer를 통과한 후의 차원은 다음과 같습니다.
 
 $$
-O = floor({ I-K+2P\over S }+1)
+floor(\frac{Input-Kernel}{Stride}+1)
 $$
 
 input이 1개의 channel(depth)만 가지는 경우 즉 흑백 이미지인 경우라면 kernel(filter)는 1개의 채널을 가지겠지만
