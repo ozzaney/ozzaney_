@@ -5,6 +5,7 @@ categories: [ keyword, AI, NLP ]
 image: assets/images/cnn.jpeg
 use_math: true
 ---
+# how to use CNN in NLP?
 
 ## content
 
@@ -13,7 +14,7 @@ use_math: true
 - 합성곱 신경망을 이용한 분류문제 해결
 - 합성곱 신경망을 통한 문자임베딩
 
-## 요약
+## Summary
 
 fully connected layer의 불필요한 연산량, 오버피팅, 공간정보 유실의 문제를 해결하기 위해 등장한 CNN.
 CNN은 hidden layer로 convolution layer가 있으며, 이 layer는 "공간정보(spatial structure)를 반영한 패턴을 detection"하는 역할을 수행한다.
@@ -70,9 +71,8 @@ CNN에서 가중치는 이미 언급한 바와 같이 kernel(filter)들의 원�
 이를 통해 fc layer보다 훨씬 적은 가중치를 사용하면서도 spatial structure를 보존합니다.
 convolutional layer를 통과한 후의 차원은 다음과 같습니다.
 
-$$
+
 floor(\frac{Input-Kernel}{Stride}+1)
-$$
 
 input이 1개의 channel(depth)만 가지는 경우 즉 흑백 이미지인 경우라면 kernel(filter)는 1개의 채널을 가지겠지만
 만약 input이 3개의 channel을 가진 경우 즉 컬러 이미지라면 kernel또한 3개의 채널을 가져야 합니다.
@@ -85,7 +85,14 @@ input이 1개의 channel(depth)만 가지는 경우 즉 흑백 이미지인 경�
 합성곱 연산의 결과로 얻은 특성 맵의 채널 차원은 RGB 채널 등과 같은 컬러의 의미를 담고 있지는 않습니다. => 만약 task가 컬러정보가 필요하다면 어떤 정보를 기반으로 컬러에 대한 정보를 전달하는지가 궁금하네요!
 
 따라서 채널의 수가 1이든 3이든 커널을 통과한 결과 채널이 1인 feature map을 얻게 됩니다.
+
+<img width="375" alt="하나" src="https://user-images.githubusercontent.com/85322951/190064012-f530dbd2-53b9-41f8-a4fc-fbaba678f088.png">
+
 그러나 커널의 개수가 여러 개인 경우 채널이 1인 feature map들이 커널의 개수만큼 생기게 되고 이것이 쌓여서 feauture map은 커널의 개수를 channel의 크기로 가지게 됩니다.
+
+<img width="347" alt="쌓인거" src="https://user-images.githubusercontent.com/85322951/190064045-fc5e83a8-bf33-47b8-ad48-bee293c27b9e.png">
+
+따라서 하나의 가중치 매개변수의 총 수는 "kernel의 width * kernel의 height * kernel의 depth * kernel의 개수" 입니다.
 
 
 
