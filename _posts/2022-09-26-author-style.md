@@ -77,11 +77,13 @@ Generative pre-training of sentence encoders (Radford et al. 2018; Devlin et al.
  unsupervised pre-training는 이전의 말로 다음말을 예측하는 모델로 다음단어가 나올 확률을 예측합니다.
 (일반적으로 causal language modeling (CLM) objective로 알려져 있습니다.
 확률에 대한 식은 다음과 같습니다.
+
 $P(y_t|y_{1:t-1}, x)$
+
 text generation 테스크에서만 특징적으로 input prompt x를 취하여 input의 context를 고수하도록 합니다.
 GPT-2에서는 author-specific corpus로 fine-tuned된 경우 target author의 style에 대해 상당히 stylistic alignment가 잘 됩니다. 그러나 stylistic rewriting(우리가 하려는 테스크)와 stylized text generation의 본질적인 차이로 인해 GPT-2는 content를 보존하는데에 좋은 성능을 보이지는 못했습니다.
 stylistic rewriting에서는 stylized generation에서 input text에서의 정보(content)를 유지하지만 GPT-2에 의한 스타일 생성은 입력 프롬프트와 관련된 콘텐츠를 생성하므로 미세 조정된 GPT-2는 stylistic rewriting을 처리할 수 없습니다.
- Lample and Conneau (2019)의 최근의 
+ Lample and Conneau (2019)에서는 crosslingual language models를 3개의 다른 language modeling objectives(CLM, MLM, TLM)로 pre-training을 하고 encoder와 decoder를 
 
 
 
