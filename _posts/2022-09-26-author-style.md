@@ -56,7 +56,7 @@ Lample and Conneau (2019)를 참고하여 encoder와 decoder 둘 다에 앞서 p
 접근방식은 supervised인 방식(parallel data에 의존), unsupervised 방식이 있습니다.
 unsupervised방식 중 influential한 방법들은  (a) using readily available classificationbased discriminators to guide the process of generation (Fuet al. 2018), (b) using simple linguistic rules to achieve alignment with the target style (Li et al. 2018), or (c) using auxiliary modules (called scorers) that score the generation process on aspects like fluency, formality and semantic relatedness while deciding on the learning scheme
 of the encoder-decoder network (Jain et al. 2019)이 있습니다.
-그러나 해당 모델은 author의 style을 가진 text generation문제 이므로 discriminator나 score를 만들기는 어렵습니다. 
+그러나 본 논문에서 만들고자 하는 모델은 author의 style을 가진 text generation 문제 이므로 discriminator나 score를 만들기는 어렵습니다. 
 또한 author의 style을 가진 text generation을 하기 위해 rule-based generation을 하는 것은 수많은 rule과 작가들의 스타일에 대한 정의를 요구하므로 너무나 복잡합니다.
 이러한 이유로 본 논문에서는 non-parallel data를 이용해 SOTA language model을 pre-training하기로 했습니다.
 language model을 사용한 가장 큰 이유는 stylistic rewriting이 단순한 text generation에 기반을 두기 때문입니다.
@@ -69,7 +69,22 @@ Jhamtani et al. (2017)는 parallel data를 사용해 “Shakespearized” versio
 즉 본논문의 모델은 오직 target author의 corpus만을 필요로 합니다.
 뒤에서 나오겠지만 본논문이 제시하는 모델은 non-parallel data를 사용했음에도 content preservation과 style transmission metric에서  Jhamtani et al. (2017)에 비견될만한 성능을 보입니다.
 
-* Language models: 
-* 
+* Language models
+Generative pre-training of sentence encoders (Radford et al. 2018; Devlin et al. 2019; Howard and Ruder 2018)는 nlp task에서 큰 발전을 가져왔습니다.
+해당 접근방식은 transformer language model을 커다란 unsupervised 코퍼스로 학습시키고 분류문제 또는 추론기반의 NLU 테스크에 fine-tuning해 접목하는 방법입니다. Lample and Conneau(2019)는 이를 토대로 cross-lingual language models을 만들었습니다.
+이에 착안하여 본 논문에서는 generative pre-training을 author-stylized rewriting 테스크에 적용합니다.
+ GPT-2 (Radfordet al. 2019)에서는 크고 다양한 코퍼스로 pre-trained 되었고 NL generation을 비롯한 다양한 도메인과 데이터셋에서 잘 작동합니다.
+ unsupervised pre-training는 이전의 말로 다음말을 예측하는 모델로 다음단어가 나올 확률을 예측합니다.
+(일반적으로 causal language modeling (CLM) objective로 알려져 있습니다.
+확률에 대한 식은 다음과 같습니다.
+$P(y_t|y_{1:t-1}, x)$
+text generation 테스크에서만 특징적으로 input prompt x를 취하여 input의 context를 고수하도록 합니다.
+GPT-2에서는 author-specific corpus로 fine-tuned된 경우 target author의 style에 대해 상당히 stylistic alignment가 잘 됩니다. 그러나 stylistic rewriting(우리가 하려는 테스크)와 stylized text generation의 본질적인 차이로 인해 GPT-2는 content를 보존하는데에 좋은 성능을 보이지는 못했습니다.
+stylistic rewriting에서는 stylized generation에서 input text에서의 정보(content)를 유지하지만 GPT-2에 의한 스타일 생성은 입력 프롬프트와 관련된 콘텐츠를 생성하므로 미세 조정된 GPT-2는 stylistic rewriting을 처리할 수 없습니다.
+ Lample and Conneau (2019)의 최근의 
+
+
+
+* Evaluating Stylized Generation
 
 ## Propsed Approach : StyleLM
