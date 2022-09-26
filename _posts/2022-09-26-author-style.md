@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "Adapting Language Models for Non-Parallel Author-Stylized Rewriting"
+title:  "Steal the author's style"
 categories: [ keyword, AI, NLP ]
 image: assets/images/authors.png
 use_math: true
 ---
+# Adapting Language Models for Non-Parallel Author-Stylized Rewriting
 
 ## Abstract
 
