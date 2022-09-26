@@ -24,12 +24,40 @@ use_math: true
 
 NLP 분야의 다양한 재미난 문제들(장르 분류, 작가 profiling, 감성분석, 사회적 관계분류 등)에 대한 sutdy가 계속해서 있어왔습니다.
 최근 들어 stylized text generation과 style transfer에 관심이 집중되는데요, 두 개의 tasks 모두 input text를 target style해 align하여 새로운 text를 만들어내는 것이 목표입니다.
-지금까지 관련된 대다수의 작업들은 '감정 수준별 text 만들기' ,'formality alginment', '인코더 디코더를 학습시킬 때 보조사를 활용해 유창성(fluency), formality(형식성), semantic relatedness(의미 관련성)의 양상에 대해 점수를 매기는 방식' 등에 대한 것들이었습니다.
+지금까지 관련된 대다수의 작업들은 감정과 형식성, 또는 두개의 결합에 대해 다양한 level 별로 말투를 바꾸는 것이었습니다.
+(예를 들어 형식적이면서 기분좋은 말투: 안녕하십니까 만나게 되어 반갑습니다, 비형식적이며 기분 좋은 말투: ㅎㅇㅎㅇ 반갑쓰)
+이러한 연구들은 주로 formality와 sentiment에 대해 정반대의 level을 지닌 parallel data를 이용해 이루어졌습니다.
+그러나 author의 style(심리언어학적 측면의 개념이 아닌 author의 글에 드러난 언어적 선택의 혼합으로서의 style)에 맞게 텍스트를 생성하는 것에 대해서는 연구가 부족했습니다.
+Jhamtani et al. (2017)는 “Shakespearized text”를 만들려고 하긴 했지만 parallel data를 사용했다는 점에 한계가 있습니다.
+parallel data를 이용한다면 author별로 데이터를 구축해야하는 한계가 있으므로 이에 의존하지 않는 방식이 필요했습니다.
+이에 따라 본논문에서는 parallel data에 의존하지 않는 author-stylized rewriting 방법에 대해 propose하였습니다.
+
+<img width="503" alt="스크린샷 2022-09-26 오후 4 23 02" src="https://user-images.githubusercontent.com/85322951/192216941-66b8c760-8f3b-40fd-910f-4c056be2259d.png">
+
+이 모델의 특징은 **SOTA 언어모델의 일반화 능력을 활용해 parallel data없이 이를 target author의 스타일 특성에 맞도록 adapt한 것**입니다.
+먼저 masked language modeling objective (Devlin etal. 2019)을 author courpus와 wikipedia data 두가지 데이터를 활용해 pre-train합니다.
+Lample and Conneau (2019)를 참고하여 encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다.
+이후 해당 모델을 denoising autoencoder loss로 학습해 target author의 corpus로 fine-tuning합니다.
+본 모델은 특정 스타일을 지니거나 아무런 스타일이 없는 text를 target author's style을 가진 text로 변환합니다.
+그러나 author의 스타일은 어휘, 구문, 의미 3가지 언어적 특성 에 의해 결정되기에  task를 평가하기는 쉽지 않습니다.
+따라서 본 논문은 stylistic alignment의 정도를 수량화하기 위해 새로운 방법을 제안합니다.
+뒤에서 더 자세히 알아봅시다.
+
+본 논문의 key contribution은 다음의 3가지 입니다.
+* parallel data 없이 SOTA모델을 adapt해 author-stylized text를 만드는 방법을 propose하고 evaluate했다.
+* 스타일의 어휘적 측면과 통사적 측면의 alignment을 설명하는 평가 프레임워크를 제안한다.
+기존 평가 기법과 달리, 해당 평가 프레임워크는 언어적으로 인식되고 쉽게 해석할 수 있다.
+* author-stylized text generation에 대해 baseline보다 질적, 양적으로 발전했다.
+
+## Related Work
+
+'인코더 디코더를 학습시킬 때 보조사를 활용해 유창성(fluency), formality(형식성), semantic relatedness(의미 관련성)의 양상에 대해 점수를 매기는 방식' 등에 대한 것들이었습니다.
 그러나 해당 모델은 author의 style을 가진 text generation문제 이므로 discriminator나 score를 만들기는 어렵습니다. 
 또한 author의 style을 가진 text generation을 하기 위해 rule-based generation을 하는 것은 수많은 rule과 작가들의 스타일에 대한 정의를 요구하므로 너무나 복잡합니다.
 이러한 이유로 본 논문에서는 non-parallel data를 이용해 SOTA language model을 pre-training하기로 했습니다.
 language model을 사용한 가장 큰 이유는 stylistic rewriting이 단순한 text generation에 기반을 두기 때문입니다.
 본 논문의 목적과 비슷하게 author의 스타일로 text를 adapt하기 위한 시도가 있어왔습니다.
+
 Tikhonov and Yamshchikov (2018)는 stylistic variables들의 임베딩을 concatenate하고 conditioning을 사용해 
 style을 end-to-end로 학습하여 author-stylized poetry를 생성하는 모델을 만들었지만 본논문과 똑같이 rewriting을 시도하지는 않았습니다.
 Jhamtani et al. (2017)는 parallel data를 사용해 “Shakespearized” version의 현대영어를 만들어내려고 했습니다.
@@ -37,5 +65,6 @@ Jhamtani et al. (2017)는 parallel data를 사용해 “Shakespearized” versio
 즉 본논문의 모델은 오직 target author의 corpus만을 필요로 합니다.
 뒤에서 나오겠지만 본논문이 제시하는 모델은 non-parallel data를 사용했음에도 content preservation과 style transmission metric에서  Jhamtani et al. (2017)에 비견될만한 성능을 보입니다.
 
-
+* Language models: 
+* 
 
