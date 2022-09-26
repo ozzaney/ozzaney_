@@ -51,7 +51,11 @@ Lample and Conneau (2019)를 참고하여 encoder와 decoder 둘 다에 앞서 p
 
 ## Related Work
 
-'인코더 디코더를 학습시킬 때 보조사를 활용해 유창성(fluency), formality(형식성), semantic relatedness(의미 관련성)의 양상에 대해 점수를 매기는 방식' 등에 대한 것들이었습니다.
+### Stylized Text Geneartion(STG)
+최근의 연구에서 언어심리학적 측면에서 sentiment나 formality의 다양한 level을 구현하는 방식의 STG가 등장했습니다.
+접근방식은 supervised인 방식(parallel data에 의존), unsupervised 방식이 있습니다.
+unsupervised방식 중 influential한 방법들은  (a) using readily available classificationbased discriminators to guide the process of generation (Fuet al. 2018), (b) using simple linguistic rules to achieve alignment with the target style (Li et al. 2018), or (c) using auxiliary modules (called scorers) that score the generation process on aspects like fluency, formality and semantic relatedness while deciding on the learning scheme
+of the encoder-decoder network (Jain et al. 2019)이 있습니다.
 그러나 해당 모델은 author의 style을 가진 text generation문제 이므로 discriminator나 score를 만들기는 어렵습니다. 
 또한 author의 style을 가진 text generation을 하기 위해 rule-based generation을 하는 것은 수많은 rule과 작가들의 스타일에 대한 정의를 요구하므로 너무나 복잡합니다.
 이러한 이유로 본 논문에서는 non-parallel data를 이용해 SOTA language model을 pre-training하기로 했습니다.
@@ -68,3 +72,4 @@ Jhamtani et al. (2017)는 parallel data를 사용해 “Shakespearized” versio
 * Language models: 
 * 
 
+## Propsed Approach : StyleLM
