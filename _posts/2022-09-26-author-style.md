@@ -76,8 +76,6 @@ Generative pre-training of sentence encoders (Radford et al. 2018; Devlin et al.
  GPT-2 (Radfordet al. 2019)에서는 크고 다양한 코퍼스로 pre-trained 되었고 NL generation을 비롯한 다양한 도메인과 데이터셋에서 잘 작동합니다.
  unsupervised pre-training는 이전의 말로 다음말을 예측하는 모델로 다음단어가 나올 확률을 예측합니다.
 (일반적으로 causal language modeling (CLM) objective로 알려져 있습니다.
-확률에 대한 식은 다음과 같습니다.
-
 $P(y_t|y_{1:t-1}, x)$
 
 text generation 테스크에서만 특징적으로 input prompt x를 취하여 input의 context를 고수하도록 합니다.
