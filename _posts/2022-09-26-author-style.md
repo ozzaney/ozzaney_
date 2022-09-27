@@ -113,9 +113,9 @@ content preservation의 성능은 input과 만들어진 text간에 얼마나 유
 위 그림은 해당 모델이 프레임워크를 표현한 것입니다.
 먼저 방대한 corpus로 transformer based language model을 MLM 목적함수를 가지고 훈련합니다.
 MLM은 masked된 단어가 앞뒤 맥락(bidirectional context)을 통해 유추되도록 합니다.
-x가 주어진 문장일 떄 $x_u$는 x에서 position u가 masked된 상태를 나타낸다고 합시다.
+x가 주어진 문장일 떄 $x_{\u}$는 x에서 position u가 masked된 상태를 나타낸다고 합시다.
 (u위치의 token이 masked될 경우 해당 token이 [MASK]로 대체됩니다. 이를 통해 masked된 문장의 길이가 전과 달라지지 않도록 합니다.)
-MLM 목적함수는 $x_u$를 예측하도록 language model을 훈련시킵니다. $즉 x_{\u}$를 input으로 받아들였을 때 
+MLM 목적함수는 x_{\u}$를 input으로 받아들였을 때 $x_u$를 예측하도록 language model을 훈련시킵니다. 
 
-
+<img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192435710-470316da-1b83-43aa-b031-866ca8f23d09.png">
 
