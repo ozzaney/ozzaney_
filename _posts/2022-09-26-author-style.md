@@ -35,6 +35,7 @@ language modeling을 할 때 언어의 뉘앙스를 그대로 가져가기가 �
 stylized text generation과 style transfer 두 개의 tasks 모두 input text를 target style에 align하여 새로운 text를 만들어내는 것이 목표인데,이에 대한 작업들은 sentiment와 formality, 또는 두개의 결합에 대해 다양한 level 별로 말투를 바꾸는 것이었습니다.
 
 (예시)  
+내용은 동일하나 formality만 다른 두 문장
 - 형식적이면서 기분좋은 말투: 안녕하십니까 만나게 되어 반갑습니다  
 - 비형식적이며 기분 좋은 말투: ㅎㅇㅎㅇ 반갑쓰  
 
