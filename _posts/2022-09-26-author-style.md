@@ -149,10 +149,11 @@ pre-trained LM를 각각 두 개로 복사해 각각 enocdoer와 decoder로 삼�
 
 본논문에서는 MLM을 pre-training할 때 12-layer의 tranformer encoder(Vaswani et al. 2017)를 사용하였고, 해당 transformer encoder에서 GLEU 활성화함수(Hendrycks and Gimpel 2017)를 이용, 하이퍼파리미터로는 hidden unit는 512, 16 heads, dropout 비율은 0.1을 채택했고 positional embedding을 학습했습니다. 또 Adam optimizer를 사용했고 learning rate은 0.0001이었습니다.
 학습시 input으로 256개 토큰의 streams를 이용했고 mini-batch size는 32를 채택했습니다.
-학습은 validation set에 대해 LM의 [perplexity](https://wikidocs.net/21697)이 더이상 줄어들지 않을 때까지 학습하였습니다.
+학습은 validation set에 대해 LM의 [perplexity](https://wikidocs.net/21697)가 더이상 줄어들지 않을 때까지 학습하였습니다.
 target author에 대해 fine-tune할 때 사용하는 encoder와 decoder 모두에서 똑같은 pre-trained MLM transformer를 초기 값으로 사용합니다. 이때 하이퍼파라미터는 pre-training을 할 때와 동일한 값을 사용합니다.(Lample and Conneau (2019)를 참고한 방법론)
-$P_{drop}$으로 버리고, $P_{blank}$는 0.1로 정했고 모델이 수렴할 때까지 fine-tune을 했습니다.
+$P_{drop}$, $P_{blank}$는  둘 다 0.1로 정했고 모델이 수렴할 때까지 fine-tune을 했습니다.
 또한 거대한 corpus를 다루기 위해 combined training dataset에 Byte Pair Encoding (BPE)를 적용했고 80k BPE codes를 훈련시켰습니다.
+
 
 
 
