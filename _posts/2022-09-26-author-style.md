@@ -115,7 +115,7 @@ content preservation의 성능은 input과 만들어진 text간에 얼마나 유
 MLM은 masked된 단어가 앞뒤 맥락(bidirectional context)을 통해 유추되도록 합니다.
 x가 주어진 문장일 떄 $x_{\u}$는 x에서 position u가 masked된 상태를 나타낸다고 합시다.
 (u위치의 token이 masked될 경우 해당 token이 [MASK]로 대체됩니다. 이를 통해 masked된 문장의 길이가 전과 달라지지 않도록 합니다.)
-MLM 목적함수는 x_{\u}$를 input으로 받아들였을 때 $x_u$를 예측하도록 language model을 훈련시킵니다. 
+MLM 목적함수는 $x_{\u}$를 input으로 받아들였을 때 $x_u$를 예측하도록 language model을 훈련시킵니다. 
 
 <img width="370" alt="스크린샷 2022-09-27 오후 1 57 31" src="https://user-images.githubusercontent.com/85322951/192439148-f6c52ec6-6381-4e14-aed7-d93d0ef1e1d0.png">
 
@@ -124,6 +124,7 @@ MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 
 
 이제 author-stylized rewriting을 가능하게 하기 위해, 앞서 만든 pre-trained laguage model 두 개를 직렬으로 이어붙여 encoder-decoder 구조를 만듭니다. 
 즉 encoder와 decoder의 학습가능한 파라미터들이 pre-trained LM으로 초기화되도록 합니다.
+
 **Transformer 기반 언어 모델의 구조는 attention 메커니즘이 Transformer 설계에 내재되어 있기 때문에 인코더의 출력과 디코더의 입력을 명시적으로 align하지 않고도 pre-trained된 LM의 두 인스턴스를 직렬로 연결할 수 있습니다.**
 
 이제 연결된 encoder-decoder를 다음의 DAE-loss를 이용해 fine-tune합니다.
