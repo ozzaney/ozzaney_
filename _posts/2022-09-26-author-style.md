@@ -79,7 +79,7 @@ Jhamtani et al. (2017)는 parallel data를 사용해 “Shakespearized” versio
 즉 본논문의 모델은 오직 target author의 corpus만을 필요로 합니다.
 뒤에서 나오겠지만 본논문이 제시하는 모델은 non-parallel data를 사용했음에도 content preservation과 style transmission metric에서  Jhamtani et al. (2017)에 비견될만한 성능을 보입니다.
 
-* Language models
+### Language models
 
 Generative pre-training of sentence encoders (Radford et al. 2018; Devlin et al. 2019; Howard and Ruder 2018)는 nlp task에서 큰 발전을 가져왔습니다.
 해당 접근방식은 transformer language model을 커다란 unsupervised 코퍼스로 학습시키고 분류문제 또는 추론기반의 NLU 테스크에 fine-tuning해 접목하는 방법입니다. Lample and Conneau(2019)는 이를 토대로 cross-lingual language models을 만들었습니다.
@@ -96,8 +96,11 @@ stylistic rewriting에서는 stylized generation에서 input text에서의 정�
 
 해당 모델에서는 MLM에 대해 거대 corpus로 학습시킨 뒤, encoder-decoder setup에서 DAE loss를 사용해 author specific corpus로 fine-tuning했습니다.
 
-* Evaluating Stylized Generation
+### Evaluating Stylized Generation
+
 Fu et al. (2018)에서는 style transfer models의 성능을 1. content preservation, 2. transfer strength이라는 두가지의 축으로 평가했습니다.
-첫번째 축인 content preservation의 성능은 input과 만들어진 text간에 얼마나 유사한지를 나타내는 [BLEU](https://wikidocs.net/31695)로 평가하고, 
+content preservation의 성능은 input과 만들어진 text간에 얼마나 유사한지를 나타내는 [BLEU](https://wikidocs.net/31695)로 평가하고, transfer strength는 target style에 대해 만들어진 텍스트가 얼마나 align하는가로 평가합니다. unsupervised learning이기에 generated된 text의 style이 잘 생성되었는지를 판단할 정답 데이터(groud-truth)가 없고, 그래서 transfer strength를 평가하기가 쉽지 않습니다. 
+따라서 본 논문은 author-stylized text에서 스타일의 여러 어휘 및 통사적 측면의 alignment를 정량화하는 평가법을 
+
 
 ## Propsed Approach : StyleLM
