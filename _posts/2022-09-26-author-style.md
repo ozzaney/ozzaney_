@@ -100,7 +100,23 @@ stylistic rewriting에서는 stylized generation에서 input text에서의 정�
 
 Fu et al. (2018)에서는 style transfer models의 성능을 1. content preservation, 2. transfer strength이라는 두가지의 축으로 평가했습니다.
 content preservation의 성능은 input과 만들어진 text간에 얼마나 유사한지를 나타내는 [BLEU](https://wikidocs.net/31695)로 평가하고, transfer strength는 target style에 대해 만들어진 텍스트가 얼마나 align하는가로 평가합니다. unsupervised learning이기에 generated된 text의 style이 잘 생성되었는지를 판단할 정답 데이터(groud-truth)가 없고, 그래서 transfer strength를 평가하기가 쉽지 않습니다. 
-따라서 본 논문은 author-stylized text에서 스타일의 여러 어휘 및 통사적 측면의 alignment를 정량화하는 평가법을 
-
+따라서 본 논문은 author-stylized text에서 스타일의 여러 어휘 및 통사적 측면의 alignment를 정량화하는 평가법을 제안합니다.  
 
 ## Propsed Approach : StyleLM
+
+이제 본격적으로 모델에 대해 설명해보도록 하겠습니다.
+해당 모델은 두가지 중요한 양상을 가집니다.
+1. transformer based model을 커다란 데이터셋으로 pre training하고 author specific corpus로 DAE를 사용해 fine-tuning한다.
+2. 해당 모델은 self-supervised 방식으로 학습되며 parallel data에 의존하지 않는다.
+
+<img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192433048-8dbc1cb7-13b3-4c23-bef0-b7d88297c8b2.png">{: width="700" height="400"}
+
+위 그림은 해당 모델이 프레임워크를 표현한 것입니다.
+먼저 방대한 corpus로 transformer based language model을 MLM 목적함수를 가지고 훈련합니다.
+MLM은 masked된 단어가 앞뒤 맥락(bidirectional context)을 통해 유추되도록 합니다.
+x가 주어진 문장일 떄 $x_u$는 x에서 position u가 masked된 상태를 나타낸다고 합시다.
+(u위치의 token이 masked될 경우 해당 token이 [MASK]로 대체됩니다. 이를 통해 masked된 문장의 길이가 전과 달라지지 않도록 합니다.)
+MLM 목적함수는 $x_u$를 예측하도록 language model을 훈련시킵니다. $즉 x_{\u}$를 input으로 받아들였을 때 
+
+
+
