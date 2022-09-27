@@ -42,7 +42,7 @@ Jhamtani et al. (2017)는 “Shakespearized text”를 만들려고 하긴 했�
 parallel data를 이용한다면 author별로 parallel 데이터를 구축해야하는 한계가 있으므로 이에 의존하지 않는 방식이 필요했습니다.
 이에 따라 본논문에서는 parallel data에 의존하지 않는 author-stylized rewriting 방법에 대해 propose하였습니다.
 
-<img width="503" alt="스크린샷 2022-09-26 오후 4 23 02" src="https://user-images.githubusercontent.com/85322951/192216941-66b8c760-8f3b-40fd-910f-4c056be2259d.png">{: width="500" height="400"}
+<img width="503" alt="스크린샷 2022-09-26 오후 4 23 02" src="https://user-images.githubusercontent.com/85322951/192216941-66b8c760-8f3b-40fd-910f-4c056be2259d.png">{: width="700" height="400"}
 
 이 모델의 특징은 **SOTA language model을 fine tuning해 parallel data없이 target author의 스타일 특성에 맞는 text rewriting**에 성공했다는 점 입니다.
 구체적인 학습방법은 다음과 같습니다.
@@ -89,9 +89,11 @@ $P(y_t|y_{1:t-1}, x)$
 
 위와 같이 CLM중 에서도 text generation 테스크에서만 특징적으로 input prompt x를 취하여 input의 context를 반영하도록 합니다.
 GPT-2에서는 author-specific corpus로 fine-tuned된 경우 target author의 style에 대해 상당히 stylistic alignment가 잘 됩니다. 그러나 stylistic rewriting(우리가 하려는 테스크)와 stylized text generation의 본질적인 차이로 인해 GPT-2는 content를 보존하는데에 좋은 성능을 보이지는 못했습니다.
-stylistic rewriting에서는 stylized generation에서 input text에서의 정보(content)를 유지하지만 GPT-2에 의한 스타일 생성은 입력 프롬프트와 관련된 콘텐츠를 생성하므로 미세 조정된 GPT-2는 stylistic rewriting을 처리할 수 없습니다.
- Lample and Conneau (2019)에서는 crosslingual language models를 3개의 다른 language modeling objectives(CLM, MLM, TLM)로 pre-training을 하고 encoder와 decoder를 
+stylistic rewriting에서는 stylized generation에서 input text에서의 정보(content)를 유지하지만 GPT-2에 의한 스타일 생성은 입력 프롬프트와 관련된 콘텐츠를 **생성**하므로 미세 조정된 GPT-2는 stylistic rewriting을 처리할 수 없습니다.
+즉 GPT2를 사용하면 내용을 유지하는 것이 아니라 관련된 내용을 새롭게 생성하기에, 내용을 온전히 유지하면서 타겟 작가의 스타일을 닮은 글을 생성하는 rewriting task에는 적합하지 않습니다.
+
+해당 모델에서는 MLM에 대해 거대 corpus로 학습시킨 뒤, encoder-decoder setup에서 DAE loss를 사용해 author specific corpus로 fine-tuning했습니다.
 
 * Evaluating Stylized Generation
-
+Fu et al. (2018)
 ## Propsed Approach : StyleLM
