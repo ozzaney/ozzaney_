@@ -62,7 +62,7 @@ parallel data를 이용한다면 author별로 parallel 데이터를 구축해야
 
 - parallel data 없이 SOTA모델을 fine tuning해 author-stylized text를 만드는 방법을 propose하고 evaluate했다.
 - 스타일의 어휘적 측면과 통사적 측면의 alignment을 설명하는 평가 프레임워크를 제안한다. 기존 평가 기법과 달리, 해당 평가방법은 언어적으로 쉽게 해석할 수 있다.
--author-stylized text generation에 대해 baseline보다 질적, 양적으로 발전했다.
+- author-stylized text generation에 대해 baseline보다 질적, 양적으로 발전했다.
 
 ## Related Work
 
