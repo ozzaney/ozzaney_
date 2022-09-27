@@ -117,7 +117,7 @@ x가 주어진 문장일 떄 $x_{\u}$는 x에서 position u가 masked된 상태�
 (u위치의 token이 masked될 경우 해당 token이 [MASK]로 대체됩니다. 이를 통해 masked된 문장의 길이가 전과 달라지지 않도록 합니다.)
 MLM 목적함수는 x_{\u}$를 input으로 받아들였을 때 $x_u$를 예측하도록 language model을 훈련시킵니다. 
 
-<img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192435710-470316da-1b83-43aa-b031-866ca8f23d09.png">
+<img width="370" alt="스크린샷 2022-09-27 오후 1 57 31" src="https://user-images.githubusercontent.com/85322951/192439148-f6c52ec6-6381-4e14-aed7-d93d0ef1e1d0.png">
 
 이때 X는 전체 training corpus입니다.
 MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 각각의 input sentence마다 전체 중 15%의 token들을 랜덤하게 mask합니다. 그리고 그 중 80%를 [MASK]로 replace하고 10%는 **radom token**으로 replace하며, 나머지 10%는 바꾸지 않은 채로 둡니다.
@@ -128,7 +128,7 @@ MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 
 
 이제 연결된 encoder-decoder를 다음의 DAE-loss를 이용해 fine-tune합니다.
 
-<img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192437904-5160d879-e088-4bf9-a34d-58857d2c78f9.png">
+<img width="371" alt="스크린샷 2022-09-27 오후 2 14 47" src="https://user-images.githubusercontent.com/85322951/192439238-644b3aa2-b529-47e3-9245-434a45ea391b.png">
 
 이때 C(x)는 input 문장 x의 noisy한 버전이고 S는 target author corpus의 문장들입니다.
 C(x)를 만들기 위해 x안의 모든 각각의 단어들에 대해서 $P_{drop}$으로 버리고, $P_{blank}$으로 [BLANK]로 대체합니다.
