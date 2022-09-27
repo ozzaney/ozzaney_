@@ -7,14 +7,19 @@ use_math: true
 ---
 # Adapting Language Models for Non-Parallel Author-Stylized Rewriting
 
+해당 게시글은 제가 본 논문을 읽고 이해한 바를 정리한 내용입니다. 
+틀린 내용이 있거나 보충이 필요한 내용, 또는 질문이 있다면 댓글로 남겨주시면 감사하겠습니다 :)
+글에서 사용된 단어 중 문자 그대로의 의미로 이해하기 보다는 **학술적 정의**로 받아들여야 하는 단어는 번역하지 않고 영어 그대로 쓰려고 노력하였으니 이 점 참고해주시기 바랍니다.
+
 ## Abstract
 
-최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 언어모델링이 발전하고 있고 스타일링된 텍스트를 만드는 것에 대해 많은 관심이 쏠리고 있습니다.
-이러한 발전에 힘입어 본 논문에서는 **언어모델의  일반화 능력을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델**을 소개합니다.
-예를 들면 평범한 일상의 말을 input으로 넣으면 output으로 셰익스피어의 말투를 내어주는 모델을 만들어 볼 수 있습니다.
-본 모델은 pre-trained language model을 fine-tuning해 author-stylized text를 만들어내는 것이 목적인데요,
-이를 위해 DAE(denoising autoencoder) loss를 사용해 encoder-decoder 구조에서 학습하였고 데이터는 author-specific corpus로 fine-tuning 하였습니다.  
-언어모델링을 할 때 언어의 nuance(뉘앙스)를 그대로 가져가기가 어려울 때가 많은데, 해당 모델에서는 DAE loss를 활용해 parallel data없이도 모델이 nuance를 학습할 수 있었습니다. 그게 어떻게 가능할 수 있었는지는 본론에서 더 자세히 이야기해보도록 하겠습니다.
+최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 language modeling이 발전하고 있고 그 중 **스타일링된 텍스트**를 만드는 것에 대해 많은 관심이 쏠리고 있습니다.
+이러한 배경에서 본 논문에서는 **[language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델**을 소개합니다.
+예를 들면 평범한 일상의 문장을 input으로 넣으면 output으로 셰익스피어의 말투로 바뀐 문장을 내어주는 모델을 만드는 것입니다.
+본 모델은 pre-trained language model을 [fine-tuning](https://eehoeskrap.tistory.com/186)해 author-stylized text를 만들어내는 것이 목적인데요,
+이를 위해 [Denoising AutoEncoder)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 author-specific corpus로 fine-tuning 하였습니다.  
+language modeling을 할 때 언어의 뉘앙스를 그대로 가져가기가 어려울 때가 많은데, 해당 모델에서는 DAE loss를 활용해 parallel data 없이도 모델이 뉘앙스를 학습할 수 있었습니다.
+이제 
 
 * 여기서 parallel data는 뜻은 같지만 스타일이 다른 두 문장의 쌍이라고 보면 되는데, (일반문장, 셰익스피어 어투의 문장)을 예로 들 수 있습니다. 이러한 parallel data를 이용하면 supervised learning이 가능하다는 장점이 있지만 현실적으로 parallel data는 없거나 매우 부족한 상황이기에 non-parallel data를 이용한 방법론이 주목을 받고 있습니다.
 
