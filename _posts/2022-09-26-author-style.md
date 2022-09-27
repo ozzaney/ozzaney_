@@ -5,9 +5,9 @@ categories: [ keyword, AI, NLP ]
 image: assets/images/authors.png
 use_math: true
 ---
-# Adapting Language Models for Non-Parallel Author-Stylized Rewriting
+# [Adapting Language Models for Non-Parallel Author-Stylized Rewriting](https://arxiv.org/pdf/1909.09962.pdf)
 
-논문링크: https://arxiv.org/pdf/1909.09962.pdf
+
 
 해당 게시글은 제가 본 논문을 읽고 이해한 바를 정리한 내용입니다.  
 
