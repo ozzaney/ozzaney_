@@ -5,9 +5,9 @@ categories: [ keyword, AI, NLP ]
 image: assets/images/authors.png
 use_math: true
 ---
-# [Adapting Language Models for Non-Parallel Author-Stylized Rewriting](https://arxiv.org/pdf/1909.09962.pdf)
+# Adapting Language Models for Non-Parallel Author-Stylized Rewriting
 
-
+[논문링크](https://arxiv.org/pdf/1909.09962.pdf)
 
 해당 게시글은 제가 본 논문을 읽고 이해한 바를 정리한 내용입니다.  
 
@@ -66,12 +66,7 @@ parallel data를 이용한다면 author별로 parallel 데이터를 구축해야
 
 ### Stylized Text Geneartion(STG)
 최근의 연구에서 언어심리학적 측면에서 sentiment나 formality의 다양한 level을 구현하는 방식의 STG가 등장했습니다.
-접근방식은 supervised인 방식(parallel data에 의존), unsupervised 방식이 있습니다.
-unsupervised방식 중 influential한 방법들은  (a) using readily available classificationbased discriminators to guide the process of generation (Fuet al. 2018), (b) using simple linguistic rules to achieve alignment with the target style (Li et al. 2018), or (c) using auxiliary modules (called scorers) that score the generation process on aspects like fluency, formality and semantic relatedness while deciding on the learning scheme
-of the encoder-decoder network (Jain et al. 2019)이 있습니다.
-그러나 본 논문에서 만들고자 하는 모델은 author의 style을 가진 text generation 문제 이므로 discriminator나 score를 만들기는 어렵습니다. 
-또한 author의 style을 가진 text generation을 하기 위해 rule-based generation을 하는 것은 수많은 rule과 작가들의 스타일에 대한 정의를 요구하므로 너무나 복잡합니다.
-이러한 이유로 본 논문에서는 non-parallel data를 이용해 SOTA language model을 pre-training하기로 했습니다.
+본 논문에서는 non-parallel data를 이용해 SOTA language model을 pre-training하기로 했습니다.
 language model을 사용한 가장 큰 이유는 stylistic rewriting이 단순한 text generation에 기반을 두기 때문입니다.
 본 논문의 목적과 비슷하게 author의 스타일로 text를 adapt하기 위한 시도가 있어왔습니다.
 
@@ -83,15 +78,16 @@ Jhamtani et al. (2017)는 parallel data를 사용해 “Shakespearized” versio
 뒤에서 나오겠지만 본논문이 제시하는 모델은 non-parallel data를 사용했음에도 content preservation과 style transmission metric에서  Jhamtani et al. (2017)에 비견될만한 성능을 보입니다.
 
 * Language models
+
 Generative pre-training of sentence encoders (Radford et al. 2018; Devlin et al. 2019; Howard and Ruder 2018)는 nlp task에서 큰 발전을 가져왔습니다.
 해당 접근방식은 transformer language model을 커다란 unsupervised 코퍼스로 학습시키고 분류문제 또는 추론기반의 NLU 테스크에 fine-tuning해 접목하는 방법입니다. Lample and Conneau(2019)는 이를 토대로 cross-lingual language models을 만들었습니다.
 이에 착안하여 본 논문에서는 generative pre-training을 author-stylized rewriting 테스크에 적용합니다.
  GPT-2 (Radfordet al. 2019)에서는 크고 다양한 코퍼스로 pre-trained 되었고 NL generation을 비롯한 다양한 도메인과 데이터셋에서 잘 작동합니다.
- unsupervised pre-training는 이전의 말로 다음말을 예측하는 모델로 다음단어가 나올 확률을 예측합니다.
-(일반적으로 causal language modeling (CLM) objective로 알려져 있습니다.
-$P(y_t|y_{1:t-1}, x)$
+ unsupervised pre-training는 이전의 말로 다음말을 예측하는 모델(causal language modeling, CLM)로 다음단어가 나올 확률을 예측합니다. 다음은 text generation에 대한 CLM의 확률식입니다.  
+ 
+$P(y_t|y_{1:t-1}, x)$  
 
-text generation 테스크에서만 특징적으로 input prompt x를 취하여 input의 context를 고수하도록 합니다.
+위와 같이 CLM중 에서도 text generation 테스크에서만 특징적으로 input prompt x를 취하여 input의 context를 반영하도록 합니다.
 GPT-2에서는 author-specific corpus로 fine-tuned된 경우 target author의 style에 대해 상당히 stylistic alignment가 잘 됩니다. 그러나 stylistic rewriting(우리가 하려는 테스크)와 stylized text generation의 본질적인 차이로 인해 GPT-2는 content를 보존하는데에 좋은 성능을 보이지는 못했습니다.
 stylistic rewriting에서는 stylized generation에서 input text에서의 정보(content)를 유지하지만 GPT-2에 의한 스타일 생성은 입력 프롬프트와 관련된 콘텐츠를 생성하므로 미세 조정된 GPT-2는 stylistic rewriting을 처리할 수 없습니다.
  Lample and Conneau (2019)에서는 crosslingual language models를 3개의 다른 language modeling objectives(CLM, MLM, TLM)로 pre-training을 하고 encoder와 decoder를 
