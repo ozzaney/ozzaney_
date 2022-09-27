@@ -21,7 +21,7 @@ use_math: true
 이러한 배경에서 본 논문에서는 **[language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델**을 소개합니다.
 예를 들면 평범한 일상의 문장을 input으로 넣으면 output으로 셰익스피어의 말투로 바뀐 문장을 내어주는 모델을 만드는 것입니다.
 본 모델은 pre-trained language model을 [fine-tuning](https://eehoeskrap.tistory.com/186)해 author-stylized text를 만들어내는 것이 목적인데요,
-이를 위해 [Denoising AutoEncoder)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 author-specific corpus로 fine-tuning 하였습니다.  
+이를 위해 [Denoising AutoEncoder(DAE)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 author-specific corpus로 fine-tuning 하였습니다.  
 language modeling을 할 때 언어의 뉘앙스를 그대로 가져가기가 어려울 때가 많은데, 해당 모델에서는 DAE loss를 활용해 parallel data없이도 모델이 뉘앙스를 학습할 수 있었습니다.
 
 * 여기서 parallel data는 뜻은 같지만 스타일이 다른 두 문장의 쌍이라고 보면 되는데, (일반문장, 셰익스피어 어투의 문장)을 예로 들 수 있습니다. 이러한 parallel data를 이용하면 supervised learning이 가능하다는 장점이 있지만 현실적으로 parallel data는 없거나 매우 부족한 상황이기에 non-parallel data를 이용한 방법론이 주목을 받고 있습니다.
@@ -34,7 +34,9 @@ language modeling을 할 때 언어의 뉘앙스를 그대로 가져가기가 �
 최근 들어 NLP 분야에서 stylized text generation과 style transfer에 관심이 집중되고 있습니다.
 stylized text generation과 style transfer 두 개의 tasks 모두 input text를 target style에 align하여 새로운 text를 만들어내는 것이 목표인데,이에 대한 작업들은 sentiment와 formality, 또는 두개의 결합에 대해 다양한 level 별로 말투를 바꾸는 것이었습니다.
 
-- 예를 들어 형식적이면서 기분좋은 말투: 안녕하십니까 만나게 되어 반갑습니다, 비형식적이며 기분 좋은 말투: ㅎㅇㅎㅇ 반갑쓰
+(예시)  
+- 형식적이면서 기분좋은 말투: 안녕하십니까 만나게 되어 반갑습니다  
+- 비형식적이며 기분 좋은 말투: ㅎㅇㅎㅇ 반갑쓰  
 
 이러한 연구들은 주로 formality와 sentiment에 대해 정반대의 level을 지닌 parallel data를 이용해 이루어졌습니다.
 그러나 author의 style(심리언어학적 측면의 개념이 아닌, author의 글에 드러난 언어적 선택으로서의 style)에 맞게 텍스트를 생성하는 것에 대해서는 연구가 부족했습니다.
