@@ -119,3 +119,18 @@ MLM 목적함수는 x_{\u}$를 input으로 받아들였을 때 $x_u$를 예측�
 
 <img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192435710-470316da-1b83-43aa-b031-866ca8f23d09.png">
 
+이때 X는 전체 training corpus입니다.
+MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 각각의 input sentence마다 전체 중 15%의 token들을 랜덤하게 mask합니다. 그리고 그 중 80%를 [MASK]로 replace하고 10%는 **radom token**으로 replace하며, 나머지 10%는 바꾸지 않은 채로 둡니다.
+
+이제 author-stylized rewriting을 가능하게 하기 위해, 앞서 만든 pre-trained laguage model 두 개를 직렬으로 이어붙여 encoder-decoder 구조를 만듭니다. 
+즉 encoder와 decoder의 학습가능한 파라미터들이 pre-trained LM으로 초기화되도록 합니다.
+**Transformer 기반 언어 모델의 구조는 attention 메커니즘이 Transformer 설계에 내재되어 있기 때문에 인코더의 출력과 디코더의 입력을 명시적으로 align하지 않고도 pre-trained된 LM의 두 인스턴스를 직렬로 연결할 수 있습니다.**
+
+이제 연결된 encoder-decoder를 다음의 DAE-loss를 이용해 fine-tune합니다.
+
+<img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192437904-5160d879-e088-4bf9-a34d-58857d2c78f9.png">
+
+이때 C(x)는 input 문장 x의 noisy한 버전이고 S는 target author corpus의 문장들입니다.
+C(x)를 만들기 위해 x안의 모든 각각의 단어들에 대해서 $P_{drop}$으로 버리고, $P_{blank}$으로 [BLANK]로 대체합니다.
+이렇게 하는 이유는 모델에게 일부러 알아보기 어려운 문장을 알려줌으로써 noise에 robust한 model을 만들기 위해서입니다.
+
