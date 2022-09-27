@@ -133,7 +133,12 @@ MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 
 <img width="371" alt="스크린샷 2022-09-27 오후 2 14 47" src="https://user-images.githubusercontent.com/85322951/192439238-644b3aa2-b529-47e3-9245-434a45ea391b.png">
 
 이때 C(x)는 input 문장 x의 noisy한 버전이고 S는 target author corpus의 문장들입니다.
-C(x)를 만들기 위해 x안의 모든 각각의 단어들에 대해서 $P_{drop}$으로 버리고, $P_{blank}$으로 [BLANK]로 대체합니다.
-이렇게 하는 이유는 모델에게 일부러 알아보기 어려운 문장을 알려줌으로써 noise에 robust한 model을 만들기 위해서입니다. 
+C(x)를 만들기 위해 x안의 모든 각각의 단어들에 대해서 $P_{drop}$으로 버리고, $P_{blank}$으로 [BLANK]로 대체합니다. 이렇게 하는 이유는 모델에게 일부러 알아보기 어려운 문장을 알려줌으로써 noise에 robust한 model을 만들기 위해서입니다. 
+
+![denoising ](https://user-images.githubusercontent.com/85322951/192441299-a8b9ba23-4397-4ca2-955a-751c15fb39e9.png)
+
+pre-trained LM를 각각 enocdoer와 decoder로 삼아 두 개를 연결합니다. noisy version으로 fine-tuning이 되면서 enocder는 masked words를 유추하여 만들어냅니다.(이것은 원래의 pre-trained model의 의도대로 된 모습입니다.)
+이렇게 encoder가 만든 output은 decoder의 input으로 들어가게 되고 decoder에서는 noisy input text의 clear한 버전을 reconstruct하게 됩니다.
+즉 모델의 디코더가 인코더를 통과한 text를 rewrite하는 동안 target author의 스타일을 가지도록 만듭니다.
 
 
