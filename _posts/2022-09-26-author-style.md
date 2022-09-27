@@ -137,8 +137,18 @@ C(x)를 만들기 위해 x안의 모든 각각의 단어들에 대해서 $P_{dro
 
 ![denoising ](https://user-images.githubusercontent.com/85322951/192441299-a8b9ba23-4397-4ca2-955a-751c15fb39e9.png)
 
-pre-trained LM를 각각 enocdoer와 decoder로 삼아 두 개를 연결합니다. noisy version으로 fine-tuning이 되면서 enocder는 masked words를 유추하여 만들어냅니다.(이것은 원래의 pre-trained model의 의도대로 된 모습입니다.)
+pre-trained LM를 각각 두 개로 복사해 각각 enocdoer와 decoder로 삼아 두 개를 연결합니다.
+이는 autoencoder 구조로 encoder-decoder 구조의 일종입니다.
+이제 해당 구조에 input으로 텍스트의 noisy version을 넣어주면 enocder는 masked words를 유추하여 만들어냅니다.(이것은 원래의 pre-trained model의 의도대로 된 모습입니다.)
 이렇게 encoder가 만든 output은 decoder의 input으로 들어가게 되고 decoder에서는 noisy input text의 clear한 버전을 reconstruct하게 됩니다.
-즉 모델의 디코더가 인코더를 통과한 text를 rewrite하는 동안 target author의 스타일을 가지도록 만듭니다.
+즉 모델의 디코더가 인코더를 통과한 noisy text를 rewrite할 때 target author의 스타일을 가진 문장을 생성하게 됩니다.
+
+### Implementation detail
+
+<img width="927" alt="스크린샷 2022-09-27 오후 1 34 56" src="https://user-images.githubusercontent.com/85322951/192433048-8dbc1cb7-13b3-4c23-bef0-b7d88297c8b2.png">{: width="700" height="400"}
+
+본논문에서는 MLM을 pre-training할 때 12-layer의 tranformer encoder(Vaswani et al. 2017)를 사용하였고, 해당 transformer encoder에서 GLEU 활성화함수(Hendrycks and Gimpel 2017)를 이용, 하이퍼파리미터로는 hidden unit는 512, 16 heads, dropout 비율은 0.1을 채택했고 positional embedding을 학습했습니다. 또 Adam optimizer를 사용했고 learning rate은 0.0001이었습니다.
+도ㅎ
+본논문에서는 MLM을 pre-training할 때 12-layer의 tranformer encoder(Vaswani et al. 2017)를 사용하였고, 해당 transformer encoder에서 GLEU 활성화함수(Hendrycks and Gimpel 2017)를 사용했고 하이퍼파리미터로 hidden unit는 512, 16 heads, dropout 비율은 0.1을 채택했고 positional embedding을 학습했습니다. 또 Adam optimizer를 사용했고 learning rate은 0.0001이었습니
 
 
