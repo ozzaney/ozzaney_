@@ -95,5 +95,7 @@ stylistic rewriting에서는 stylized generation에서 input text에서의 정�
 해당 모델에서는 MLM에 대해 거대 corpus로 학습시킨 뒤, encoder-decoder setup에서 DAE loss를 사용해 author specific corpus로 fine-tuning했습니다.
 
 * Evaluating Stylized Generation
-Fu et al. (2018)
+Fu et al. (2018)에서는 style transfer models의 성능을 1. content preservation, 2. transfer strength이라는 두가지의 축으로 평가했습니다.
+첫번째 축인 content preservation의 성능은 input과 만들어진 text간에 얼마나 유사한지를 나타내는 [BLEU](https://wikidocs.net/31695)로 평가하고, 
+
 ## Propsed Approach : StyleLM
