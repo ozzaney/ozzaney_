@@ -155,11 +155,5 @@ target author에 대해 fine-tune할 때 사용하는 encoder와 decoder 모두�
 $P_{drop}$, $P_{blank}$는  둘 다 0.1로 정했고 모델이 수렴할 때까지 fine-tune을 했습니다.
 또한 거대한 corpus를 다루기 위해 combined training dataset에 Byte Pair Encoding [BPE](https://wikidocs.net/22592)를 적용했고 80k BPE codes를 훈련시켰습니다.
 
-## Evaluation Framework
-
-### Dataset
-
-본 논문에서는 Gutenberg corpus에서 142명의 작가가 작성한 2857권의 책을 가져왔습니다.
-
 
 
