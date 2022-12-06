@@ -17,20 +17,18 @@ use_math: true
 
 최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 language modeling이 발전하고 있고 그 중 **스타일링된 텍스트**를 만드는 것에 대해 많은 관심이 쏠리고 있습니다. **스타일링된 텍스트**란 뜻은 동일하지만 스타일을 다르게 만든 텍스트를 이르는 말로, 말투나 부정/긍정, formal/informal 등의 여러가지 범주를 스타일로 정의해볼 수 있습니다.
 이러한 배경에서 본 논문에서는 **[language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델**을 소개합니다. 본 논문에서는 스타일을 **작가의 문체**로 정의했습니다.
-모델에 평범한 일상의 문장을 input으로 넣으면 output으로 셰익스피어라는 target 작가의 말투로 바뀐 문장을 output으로 만들어내는 모델을 만든 것입니다.
-본 모델은 사전학습 모델을 [fine-tuning](https://eehoeskrap.tistory.com/186)해 작가의 말투로 변형된 텍스트를 만들어내는 것이 목적인데요,
-이를 위해 [Denoising AutoEncoder(DAE)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 author-specific corpus로 fine-tuning 하였습니다.  
-language modeling을 할 때 언어의 뉘앙스를 그대로 가져가기가 어려울 때가 많은데, 해당 모델에서는 DAE loss를 활용해 parallel data없이도 모델이 뉘앙스를 학습할 수 있었습니다.
+모델에 평범한 일상의 문장을 input으로 넣으면 output으로 셰익스피어라는 target 작가의 문체로 바뀐 문장을 output으로 만들어내는 모델을 만든 것입니다.
+본 모델은 사전학습 모델을 [fine-tuning](https://eehoeskrap.tistory.com/186)해 작가의 문체로 변형된 텍스트를 만들어내는 것이 목적인데요,
+이를 위해 [Denoising AutoEncoder(DAE)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 각 작가들의 책에서 추출한 corpus로 fine-tuning 하였습니다. DAE loss를 이용해 각 작가의 corpus를 학습함으로써 parallel data없이도 모델이 텍스트의 뉘앙스를 학습할 수 있었습니다.
 
-* 여기서 parallel data는 뜻은 같지만 스타일이 다른 두 문장의 쌍이라고 보면 되는데, (일반문장, 셰익스피어 어투의 문장)을 예로 들 수 있습니다. 이러한 parallel data를 이용하면 supervised learning이 가능하다는 장점이 있지만 현실적으로 parallel data는 없거나 매우 부족한 상황이기에 non-parallel data를 이용한 방법론이 주목을 받고 있습니다.
+* 여기서 parallel data는 뜻은 같지만 스타일이 다른 두 문장의 쌍이라고 보면 되는데, (일반문장, 셰익스피어 어투의 문장)을 예로 들 수 있습니다. 이러한 parallel data를 이용하면 supervised learning(지도학습)이 가능하다는 장점이 있지만 현실적으로 parallel data는 없거나 매우 부족한 상황이기에 non-parallel data를 이용한 방법론이 주목을 받고 있습니다.
 
-모델평가에 대해서는 target 작가에 대해 생성된 텍스트의 stylistic alignment를 어휘, 통사, 표면적 측면에서 정량화하기 위해 언어적 frame work를 활용했습니다. 정량적, 정성적 평가를 통해 해당 접근방식이 SOTA보다 원본을 잘 보존하면서도 target style을 더 잘 align한다는 것을 보여줍니다. 
-
+모델평가에 대해서는 target 작가에 대해 생성된 텍스트의 stylistic alignment(스타일이 텍스트에 잘 입혀진 정도)를 어휘, 통사, 표면적 측면에서 정량화하기 위해 언어적 frame work를 활용했습니다. 정량적, 정성적 평가를 통해 해당 접근방식이 SOTA보다 원본을 잘 보존하면서도 target style을 더 잘 보여준다는 것을 보여줍니다. 
 
 ## Introduction
 
 최근 들어 NLP 분야에서 stylized text generation과 style transfer에 관심이 집중되고 있습니다.
-stylized text generation과 style transfer 두 개의 tasks 모두 input text를 target style에 align하여 새로운 text를 만들어내는 것이 목표인데,이에 대한 작업들은 sentiment와 formality, 또는 두개의 결합에 대해 다양한 level 별로 말투를 바꾸는 것이었습니다.
+stylized text generation과 style transfer 두 개의 테스크들 모두 input text를 target style에 맞게 변형하여 새로운 text를 만들어내는 것이 목표인데, 이에 대한 작업들은 sentiment와 formality, 또는 두개의 결합에 대해 다양한 level 별로 말투를 바꾸는 것이었습니다.
 
 (예시)  
 내용은 동일하나 formality만 다른 두 문장
@@ -38,19 +36,20 @@ stylized text generation과 style transfer 두 개의 tasks 모두 input text를
 - 비형식적이며 기분 좋은 말투: ㅎㅇㅎㅇ 반갑쓰  
 
 이러한 연구들은 주로 formality와 sentiment에 대해 정반대의 level을 지닌 parallel data를 이용해 이루어졌습니다.
-그러나 author의 style(심리언어학적 측면의 개념이 아닌, author의 글에 드러난 언어적 선택으로서의 style)에 맞게 텍스트를 생성하는 것에 대해서는 연구가 부족했습니다.
+그러나 심리언어학적 측면의 개념이 아닌, author의 글에 드러난 언어적 선택으로서의 style에 맞게 텍스트를 생성하는 것에 대해서는 연구가 부족했습니다.
 Jhamtani et al. (2017)는 “Shakespearized text”를 만들려고 하긴 했지만 parallel data를 사용했다는 점에 한계가 있습니다.
 parallel data를 이용한다면 author별로 parallel 데이터를 구축해야하는 한계가 있으므로 이에 의존하지 않는 방식이 필요했습니다.
-이에 따라 본논문에서는 parallel data에 의존하지 않는 author-stylized rewriting 방법에 대해 propose하였습니다.
+이에 따라 본논문에서는 parallel data에 의존하지 않는 author-stylized rewriting 방법을 고안했습니다.
 
 <img width="503" alt="스크린샷 2022-09-26 오후 4 23 02" src="https://user-images.githubusercontent.com/85322951/192216941-66b8c760-8f3b-40fd-910f-4c056be2259d.png">{: width="700" height="400"}
 
-이 모델의 특징은 **SOTA language model을 fine tuning해 parallel data없이 target author의 스타일 특성에 맞는 text rewriting**에 성공했다는 점 입니다.
+이 모델에서 주목할 점은 **SOTA 언어모델의 일반화능력을 사용하기 위해 사전학습된 언어모델을 fine tuning해 parallel data없이 target author의 스타일 특성에 맞는 text rewriting**에 성공했다는 점 입니다.
 구체적인 학습방법은 다음과 같습니다.
 
-1.  masked language model을 author courpus와 wikipedia data 두가지 데이터를 활용해 pre-train합니다.
+1. author courpus와 wikipedia data 두가지 데이터를 활용해 MLM(Masked Language Modeling)방식으로 pre-train합니다. 
 2. encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다.
-3. 해당 모델을 denoising autoencoder loss로 학습해 target author의 corpus로 fine-tuning합니다.
+
+3. 해당 모델을 target author의 corpus에 대해 denoising autoencoder loss로 fine-tuning합니다.
 
 본 모델은 특정 스타일을 지니거나 아무런 스타일이 없는 text를 input으로 받아 target author's style을 가진 text로 변환합니다.
 그러나 author의 스타일은 어휘, 구문, 의미 3가지 언어적 특성에 의해 결정되기에 모델 평가하기는 쉽지 않습니다.
@@ -59,7 +58,7 @@ parallel data를 이용한다면 author별로 parallel 데이터를 구축해야
 
 본 논문의 key contribution은 다음의 3가지 입니다.
 
-- parallel data 없이 SOTA모델을 fine tuning해 author-stylized text를 만드는 방법을 propose하고 evaluate했다.
+- parallel data 없이 SOTA모델을 fine tuning해 author-stylized text를 만드는 방법을 제시하고 평가했다.
 - 스타일의 어휘적 측면과 통사적 측면의 alignment을 설명하는 평가 프레임워크를 제안한다. 기존 평가 기법과 달리, 해당 평가방법은 언어적으로 쉽게 해석할 수 있다.
 - author-stylized text generation에 대해 baseline보다 질적, 양적으로 발전했다.
 
@@ -127,7 +126,7 @@ MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 
 
 **Transformer 기반 언어 모델의 구조는 attention 메커니즘이 Transformer 설계에 내재되어 있기 때문에 인코더의 출력과 디코더의 입력을 명시적으로 align하지 않고도 pre-trained된 LM의 두 인스턴스를 직렬로 연결할 수 있습니다.**
 
-이제 연결된 encoder-decoder를 다음의 DAE-loss를 이용해 fine-tune합니다.
+이제 연결된 encoder-decoder를 다음의 DAE-loss를 이용해 fine-tuning합니다.
 
 <img width="371" alt="스크린샷 2022-09-27 오후 2 14 47" src="https://user-images.githubusercontent.com/85322951/192439238-644b3aa2-b529-47e3-9245-434a45ea391b.png">
 
@@ -138,7 +137,7 @@ C(x)를 만들기 위해 x안의 모든 각각의 단어들에 대해서 $P_{dro
 
 pre-trained LM를 각각 두 개로 복사해 각각 enocdoer와 decoder로 삼아 두 개를 연결합니다.
 이는 autoencoder 구조로 encoder-decoder 구조의 일종입니다.
-이제 해당 구조에 input으로 텍스트의 noisy version을 넣어주면 enocder는 masked words를 유추하여 만들어냅니다.(이것은 원래의 pre-trained model의 의도대로 된 모습입니다.)
+이제 해당 구조에 input으로 텍스트의 noisy version을 넣어주면 enocder는 masked words를 유추하여 만들어냅니다.
 이렇게 encoder가 만든 output은 decoder의 input으로 들어가게 되고 decoder에서는 noisy input text의 clear한 버전을 reconstruct하게 됩니다.
 즉 모델의 디코더가 인코더를 통과한 noisy text를 rewrite할 때 target author의 스타일을 가진 문장을 생성하게 됩니다.
 
@@ -153,5 +152,34 @@ target author에 대해 fine-tune할 때 사용하는 encoder와 decoder 모두�
 $P_{drop}$, $P_{blank}$는  둘 다 0.1로 정했고 모델이 수렴할 때까지 fine-tune을 했습니다.
 또한 거대한 corpus를 다루기 위해 combined training dataset에 Byte Pair Encoding [BPE](https://wikidocs.net/22592)를 적용했고 80k BPE codes를 훈련시켰습니다.
 
+## Evaluation Framework
 
+### Dataset
 
+Gutenberg corpus내에서 142명의 작가가 작성한 2857개의 책을 사용했습니다. 
+한번도 본 적이 없는 데이터에 대한 예측을 하는 zero shot learning을 위해서 mark twain의 데이터를 훈련데이터에 포함시키지 않고 따로 떼어습니다. 훈련데이터를 다양화하기 위해 위키피디아 내용도 포함시켰습니다. 결과적으로 4.6M(4600000) passages들이 훈련데이터로 사용되었습니다. validation과 test를 위해서는 각 5000개씩의 passages를 떼어두었습니다.
+fine tuning과정에서는 각 작가별로 독립적으로 모델을 만드므로 10명의 작가를 선정하여 튜닝을 진행했습니다.
+inference과정에서는 훈련데이터에서 모델이 참고하지 않았던 데이터셋을 가져오기 위해 따로 떼어뒀던 mark twain의 데이터(문학적)와 리뷰데이터(일상적), ai 관련 위키피디아(모델에게 완전히 생소한 내용) 내용을 가져왔습니다. 
+
+모델의 성능을 비교하기 위해 아래의 4개의 baseline과 비교하였습니다.
+
+1. vanilla GPT-2 based generation :  pretrained GPT-2 model으로 문장생성
+2. Author fine-tuned GPT-2 : cross-entropy loss로 각각 작가의 corpus로 fine tuning된 모델로 문장생성
+3. Denoising-LM(no-author specific fine tuning): 논문에서 소개한 모델과 구조가 같으나(DAE loss) 전체 corpora로 fine tuning하여 문장생성, contents 보존능력을 평가하기 위한 베이스라인
+5. Supervised Stylized Rewriting : 셰익스피어의 parallel data로 학습된 모델로 문장생성
+
+## proposed evaluation method
+
+1. 의미 보존 (contents preservation)
+ 
+ BLEU metric, ROUGE(1,2,3)를 사용해 의미가 얼마나 보존됐는지를 평가합니다.
+
+2. 스타일 변환 (stylistic alignment)
+
+스타일 변환의 정도를 측정하는 척도에 대해, sentiment와 formality에 대한 스타일을 변환하는 기존의 연구방법론을 적용하기는 어렵습니다.
+왜냐하면 해당 연구에서는 classifier에 기반한 척도를 사용했는데 감정이나 formal한 정도는 classifier로 나타내기가 비교적 용이하지만
+문체는 그러한 방식을 적용하기가 어렵기 때문입니다. 따라서 본 논문에서는 multi-level 평가전략을 사용하여 stylistic 표현을 표면, 어휘, 구문 수준에서 평가합니다.
+
+-  어휘적 측면 : 작가들이 선택한 단어들은 주관적/객관적, 형식적/비형식적,  구체적/추상적, 문학적/일상적의 범주에 속할 수 있습니다. 이에 착안하여 각 8개의 범주의 어휘에 대해 seed words의 리스트를 정해두고 이들 단어와의 동시출현빈도를 고려하여 PMI를 계산하고 kNN을 통해 각 단어의 8개의 차원에 대한 점수를 구했습니다. 8개의 차원은 4개의 축에 걸쳐 나타나므로 전체 author-specific corpus에서 4개의 평균을 계산합니다. 각 평균값들은 [0,1]에 존재하여 각 작가의 문체가 주관적/객관적, 형식적/비형식적,  구체적/추상적, 문학적/일상적 중 어떠한 범주에 속하는지를 표현합니다.
+-  Syntactic elements: 작가별로 필체가 단순할수도 복잡할 수도 있습니다. 이러한 점에 착안하여 각 어구를  1. simple 2. compound 3. complex 4. compound-complex 5. 나머지의 범주로 나눠볼 수 있습니다. feng, banerjee and choi(2012)에서 발표된 알고리즘을 이용해 각 어구를 5가지 범주로 나눕니다. 각 문장은 5가지 범주중 하나에 속하므로 전체 코퍼스에 있는 문장에 대한 5차원 벡터는 5개 범주에 대한 확률분포로 볼 수 있습니다.
+-  Surface elements: 
