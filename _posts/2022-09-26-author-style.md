@@ -15,8 +15,8 @@ use_math: true
 
 ## Abstract
 
-최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 language modeling이 발전하고 있고 그 중 **스타일링된 텍스트**를 만드는 것에 대해 많은 관심이 쏠리고 있습니다. **스타일링된 텍스트**란 뜻은 동일하지만 스타일을 다르게 만든 텍스트를 이르는 말로, 말투나 부정/긍정, formal/informal 등의 여러가지 범주를 스타일로 정의해볼 수 있습니다.
-이러한 배경에서 본 논문에서는 **[language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델**을 소개합니다. 본 논문에서는 스타일을 **작가의 문체**로 정의했습니다.
+최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 language modeling이 발전하고 있고 그 중 스타일링된 텍스트를 만드는 것에 대해 많은 관심이 쏠리고 있습니다. 스타일링된 텍스트란 뜻은 동일하지만 스타일을 다르게 만든 텍스트를 이르는 말로, 말투나 부정/긍정, formal/informal 등의 여러가지 범주를 스타일로 정의해볼 수 있습니다.
+이러한 배경에서 본 논문에서는 [language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델을 소개합니다. 본 논문에서는 스타일을 작가의 문체로 정의했습니다.
 모델에 평범한 일상의 문장을 input으로 넣으면 output으로 셰익스피어라는 target 작가의 문체로 바뀐 문장을 output으로 만들어내는 모델을 만든 것입니다.
 본 모델은 사전학습 모델을 [fine-tuning](https://eehoeskrap.tistory.com/186)해 작가의 문체로 변형된 텍스트를 만들어내는 것이 목적인데요,
 이를 위해 [Denoising AutoEncoder(DAE)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 각 작가들의 책에서 추출한 corpus로 fine-tuning 하였습니다. DAE loss를 이용해 각 작가의 corpus를 학습함으로써 parallel data없이도 모델이 텍스트의 뉘앙스를 학습할 수 있었습니다.
@@ -47,9 +47,12 @@ parallel data를 이용한다면 author별로 parallel 데이터를 구축해야
 구체적인 학습방법은 다음과 같습니다.
 
 1. author courpus와 wikipedia data 두가지 데이터를 활용해 MLM(Masked Language Modeling)방식으로 pre-train합니다. 
-2. encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다.
-
-3. 해당 모델을 target author의 corpus에 대해 denoising autoencoder loss로 fine-tuning합니다.
+2. encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다. 
+3. 해당 모델을 target author의 corpus에 대해 denoising autoencoder loss로 fine-tuning합니다. 즉 원본문장에 noise를 더한 것이 input이 되고 정답 label을 원본문장으로 주어 학습하는 방식을 택합니다.
+구체적으로 설명을 해보자면, 인코더의 input은 noise가 섞인 embedding 문장이고, 인코더의 output은 denoised된 embedding일 것입니다. 
+인코더의 output을 디코더로 넘겨줄 때 모델의 디코더도 인코더의 구조를 가지므로 인코더가 받을 수 있는 input을 전달해야합니다.
+따라서 인코더의 해당 output에 softmax를 취한 뒤 argmax값으로 선정된 one-hot vector를 디코더의 output으로 넣어주면, denoising된 문장에 대한 임베딩을 만들어내어 최종 output문장을 도출할 것입니다. 
+fine-tuning을 할 때 모델이 학습하는 데이터는 author-specific 문장이기 때문에 모델이 원본문장에 노이즈가 더해진 것에 원본문장을 복원하도록 학습하는 과정에서 문장의 의미는 보존하면서 문장의 스타일만 바뀐 모델을 만들어낼 수 있습니다. 
 
 본 모델은 특정 스타일을 지니거나 아무런 스타일이 없는 text를 input으로 받아 target author's style을 가진 text로 변환합니다.
 그러나 author의 스타일은 어휘, 구문, 의미 3가지 언어적 특성에 의해 결정되기에 모델 평가하기는 쉽지 않습니다.
