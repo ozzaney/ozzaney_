@@ -15,8 +15,8 @@ use_math: true
 
 ## Abstract
 
-최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 language modeling이 발전하고 있고 그 중 스타일링된 텍스트를 만드는 것에 대해 많은 관심이 쏠리고 있습니다. 스타일링된 텍스트란 뜻은 동일하지만 스타일을 다르게 만든 텍스트를 이르는 말로, 말투나 부정/긍정, formal/informal 등의 여러가지 범주를 스타일로 정의해볼 수 있습니다.
-이러한 배경에서 본 논문에서는 [language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델을 소개합니다. 본 논문에서는 스타일을 작가의 문체로 정의했습니다.
+최근 [transformer](https://wikidocs.net/31379) 기반의 다양한 language modeling이 발전하고 있고 그 중 **스타일링된 텍스트**를 만드는 것에 대해 많은 관심이 쏠리고 있습니다. **스타일링된 텍스트**란 뜻은 동일하지만 스타일을 다르게 만든 텍스트를 이르는 말로, 말투나 부정/긍정, formal/informal 등의 여러가지 범주를 스타일로 정의해볼 수 있습니다.
+이러한 배경에서 본 논문에서는 **[language model](https://wikidocs.net/21668)을 활용해 텍스트를 target 작가의 스타일로 다시 쓰는 모델**을 소개합니다. 본 논문에서는 스타일을 **작가의 문체**로 정의했습니다.
 모델에 평범한 일상의 문장을 input으로 넣으면 output으로 셰익스피어라는 target 작가의 문체로 바뀐 문장을 output으로 만들어내는 모델을 만든 것입니다.
 본 모델은 사전학습 모델을 [fine-tuning](https://eehoeskrap.tistory.com/186)해 작가의 문체로 변형된 텍스트를 만들어내는 것이 목적인데요,
 이를 위해 [Denoising AutoEncoder(DAE)](https://deepinsight.tistory.com/126) loss를 사용해 [cascaded](https://daebaq27.tistory.com/79) encoder-decoder 구조에서 학습하였고 데이터는 각 작가들의 책에서 추출한 corpus로 fine-tuning 하였습니다. DAE loss를 이용해 각 작가의 corpus를 학습함으로써 parallel data없이도 모델이 텍스트의 뉘앙스를 학습할 수 있었습니다.
@@ -47,12 +47,9 @@ parallel data를 이용한다면 author별로 parallel 데이터를 구축해야
 구체적인 학습방법은 다음과 같습니다.
 
 1. author courpus와 wikipedia data 두가지 데이터를 활용해 MLM(Masked Language Modeling)방식으로 pre-train합니다. 
-2. encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다. 
-3. 해당 모델을 target author의 corpus에 대해 denoising autoencoder loss로 fine-tuning합니다. 즉 원본문장에 noise를 더한 것이 input이 되고 정답 label을 원본문장으로 주어 학습하는 방식을 택합니다.
-구체적으로 설명을 해보자면, 인코더의 input은 noise가 섞인 embedding 문장이고, 인코더의 output은 denoised된 embedding일 것입니다. 
-인코더의 output을 디코더로 넘겨줄 때 모델의 디코더도 인코더의 구조를 가지므로 인코더가 받을 수 있는 input을 전달해야합니다.
-따라서 인코더의 해당 output에 softmax를 취한 뒤 argmax값으로 선정된 one-hot vector를 디코더의 output으로 넣어주면, denoising된 문장에 대한 임베딩을 만들어내어 최종 output문장을 도출할 것입니다. 
-fine-tuning을 할 때 모델이 학습하는 데이터는 author-specific 문장이기 때문에 모델이 원본문장에 노이즈가 더해진 것에 원본문장을 복원하도록 학습하는 과정에서 문장의 의미는 보존하면서 문장의 스타일만 바뀐 모델을 만들어낼 수 있습니다. 
+2. encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다.
+
+3. 해당 모델을 target author의 corpus에 대해 denoising autoencoder loss로 fine-tuning합니다.
 
 본 모델은 특정 스타일을 지니거나 아무런 스타일이 없는 text를 input으로 받아 target author's style을 가진 text로 변환합니다.
 그러나 author의 스타일은 어휘, 구문, 의미 3가지 언어적 특성에 의해 결정되기에 모델 평가하기는 쉽지 않습니다.
@@ -183,6 +180,27 @@ inference과정에서는 훈련데이터에서 모델이 참고하지 않았던 
 왜냐하면 해당 연구에서는 classifier에 기반한 척도를 사용했는데 감정이나 formal한 정도는 classifier로 나타내기가 비교적 용이하지만
 문체는 그러한 방식을 적용하기가 어렵기 때문입니다. 따라서 본 논문에서는 multi-level 평가전략을 사용하여 stylistic 표현을 표면, 어휘, 구문 수준에서 평가합니다.
 
--  어휘적 측면 : 작가들이 선택한 단어들은 주관적/객관적, 형식적/비형식적,  구체적/추상적, 문학적/일상적의 범주에 속할 수 있습니다. 이에 착안하여 각 8개의 범주의 어휘에 대해 seed words의 리스트를 정해두고 이들 단어와의 동시출현빈도를 고려하여 PMI를 계산하고 kNN을 통해 각 단어의 8개의 차원에 대한 점수를 구했습니다. 8개의 차원은 4개의 축에 걸쳐 나타나므로 전체 author-specific corpus에서 4개의 평균을 계산합니다. 각 평균값들은 [0,1]에 존재하여 각 작가의 문체가 주관적/객관적, 형식적/비형식적,  구체적/추상적, 문학적/일상적 중 어떠한 범주에 속하는지를 표현합니다.
+-  lexical elements : 작가들이 선택한 단어들은 주관적/객관적, 형식적/비형식적,  구체적/추상적, 문학적/일상적의 범주에 속할 수 있습니다. 이에 착안하여 각 8개의 범주의 어휘에 대해 seed words의 리스트를 정해두고 이들 단어와의 동시출현빈도를 고려하여 PMI를 계산하고 kNN을 통해 각 단어의 8개의 차원에 대한 점수를 구했습니다. 8개의 차원은 4개의 축에 걸쳐 나타나므로 전체 author-specific corpus에서 4개의 평균을 계산합니다. 각 평균값들은 [0,1]에 존재하여 각 작가의 문체가 주관적/객관적, 형식적/비형식적,  구체적/추상적, 문학적/일상적 중 어떠한 범주에 속하는지를 표현합니다.
 -  Syntactic elements: 작가별로 필체가 단순할수도 복잡할 수도 있습니다. 이러한 점에 착안하여 각 어구를  1. simple 2. compound 3. complex 4. compound-complex 5. 나머지의 범주로 나눠볼 수 있습니다. feng, banerjee and choi(2012)에서 발표된 알고리즘을 이용해 각 어구를 5가지 범주로 나눕니다. 각 문장은 5가지 범주중 하나에 속하므로 전체 코퍼스에 있는 문장에 대한 5차원 벡터는 5개 범주에 대한 확률분포로 볼 수 있습니다.
--  Surface elements: 
+-  Surface elements: 1. 컴마개수, 2. 세미콜론, 3. 각 문장마다의 콜론수, 4. 문단 내 문장 수, 5. 문장의 단어수와 같은 표면적인 특징을 이용해 5차원의 벡터로 표현하였습니다.
+
+위의 각 레벨별 평가방식을 개별 작가의 corpus에 적용해 각 레벨마다 3개의 5차원의 벡터로 작가의 스타일을 숫자로 표현하였습니다.
+또한 모델에 의해 만들어진 문장에 대해서도 해당 방식으로 5차원의 벡터를 3개 만들 수 있습니다.
+이후 작가 코퍼스에 대한 레벨별 벡터와 만들어진 문장의 레벨별 벡터의 거리를 계산할 수 있습니다.
+거리를 구할 때 metric으로는 lexical, surface elements에 대해서는 mse를 계산하고 syntactic에 대해서는 KL divergence를 사용했습니다.
+
+## results and analysis
+
+앞서 구축한 양적 평가지표에 대해 각 모델별 의미보존 score와 스타일 변환 score를 구한 것은 다음과 같습니다.
+
+![image](https://user-images.githubusercontent.com/85322951/205889417-cffff463-dee7-4f7f-a0af-62186ecfaeaa.png)
+
+이를 통해 unsupervised baseline과 비교해봤을 때, 의미보존 score와 스타일 변환 score 모두에서 전반적인 score가 본 논문에서 제안한 styleLM이 가장 높다는 것을 알 수 있습니다.
+Supervised baseline과의 비교에서는 몇몇 지표에서는 styleLM이 뒤졌지만 unparallel data를 가지고도 이정도의 비등한 효과를 냈다는 점에서 의의를 가집니다.
+
+## conclusion and future work
+
+본 논문에서는 언어모델의 일반화능력을 사용하고 이를 target author의 corpus를 이용해 fine tuning한다.
+이때 DAE LOSS를 사용함으로써 원본을 복원하여 reconstruct하는 과정에서 stylistic adaptation이 발생하도록 유도한다.
+또한 본 논문에서는 스타일 변환에 대한 metric에 대해 언어학적인 3가지 층위의 척도를 제시하였다.
+또한 styleLM은 unsupervised learning방식 중에서는 가장 좋은 성능을 냈고, supervised learning에도 비견할 만한 성능을 내었다.
