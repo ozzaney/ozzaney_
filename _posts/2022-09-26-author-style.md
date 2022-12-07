@@ -124,6 +124,15 @@ MLM을 pre-training을 하기 위해  Devlin et al. (2019)의 방법을 따라, 
 이제 author-stylized rewriting을 가능하게 하기 위해, 앞서 만든 pre-trained laguage model 두 개를 직렬으로 이어붙여 encoder-decoder 구조를 만듭니다. 
 즉 encoder와 decoder의 학습가능한 파라미터들이 pre-trained LM으로 초기화되도록 합니다.
 
+정리하자면,
+1. author courpus와 wikipedia data 두가지 데이터를 활용해 MLM(Masked Language Modeling)방식으로 pre-train합니다. 
+2. encoder와 decoder 둘 다에 앞서 pre-train한 언어모델의 가중치로 initialization합니다. 
+3. 해당 모델을 target author의 corpus에 대해 denoising autoencoder loss로 fine-tuning합니다. 즉 원본문장에 noise를 더한 것이 input이 되고 정답 label을 원본문장으로 주어 학습하는 방식을 택합니다.
+구체적으로 설명을 해보자면, 인코더의 input은 noise가 섞인 embedding 문장이고, 인코더의 output은 denoised된 embedding일 것입니다. 
+인코더의 output을 디코더로 넘겨줄 때 모델의 디코더도 인코더의 구조를 가지므로 인코더가 받을 수 있는 input을 전달해야합니다.
+따라서 인코더의 해당 output에 softmax를 취한 뒤 argmax값으로 선정된 one-hot vector를 디코더의 output으로 넣어주면, denoising된 문장에 대한 임베딩을 만들어내어 최종 output문장을 도출할 것입니다. 
+fine-tuning을 할 때 모델이 학습하는 데이터는 author-specific 문장이기 때문에 모델이 원본문장에 노이즈가 더해진 것에 원본문장을 복원하도록 학습하는 과정에서 문장의 의미는 보존하면서 문장의 스타일만 바뀐 모델을 만들어낼 수 있습니다. 
+
 **Transformer 기반 언어 모델의 구조는 attention 메커니즘이 Transformer 설계에 내재되어 있기 때문에 인코더의 출력과 디코더의 입력을 명시적으로 align하지 않고도 pre-trained된 LM의 두 인스턴스를 직렬로 연결할 수 있습니다.**
 
 이제 연결된 encoder-decoder를 다음의 DAE-loss를 이용해 fine-tuning합니다.
