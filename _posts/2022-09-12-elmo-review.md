@@ -77,7 +77,7 @@ biLM은 두개의 방향을 가진 순방향 LM과 역방향 LM을 합친 LM입�
 
 역방향 LM
 
-<img width="444" alt="역방향" src="https://user-images.githubusercontent.com/85322951/189663942-0e69d2c8-2f37-417e-979b-0a6395039abd.png">ㅍ
+<img width="444" alt="역방향" src="https://user-images.githubusercontent.com/85322951/189663942-0e69d2c8-2f37-417e-979b-0a6395039abd.png">
 
 
 forward and backward direction의 log likelihood를 합한 값을 maximize 합니다.
